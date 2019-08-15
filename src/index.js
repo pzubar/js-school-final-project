@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {store} from "./store";
 import {BrowserRouter as Router, Route, Link} from "react-router-dom"
-import Constructor from "./constructor/Constructor.jsx"
+import Constructor from "./constructor"
 import {Provider} from "react-redux";
 import "semantic-ui-css/semantic.min.css";
 

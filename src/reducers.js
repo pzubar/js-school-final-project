@@ -1,8 +1,8 @@
-import form from "./constructor/form/reducer";
+import constructor from "./constructor/reducer";
 import {combineReducers} from "redux";
 
 const reducers = combineReducers({
-    form
+    constructor
 });
 
 export default reducers;
