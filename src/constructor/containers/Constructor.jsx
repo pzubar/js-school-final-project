@@ -1,26 +1,46 @@
 import React, {useEffect} from 'react';
-import {Container, Card, Input, Button, Form, Segment} from 'semantic-ui-react';
+import {Card, Input, Button, Form, Segment, Dimmer, Loader} from 'semantic-ui-react';
 import {connect} from "react-redux";
 import {getFields, getName} from "../selectors";
 import FieldCard from "./FieldCard";
-import {addField, setName} from "../actions";
+import {addField, setName, setIsLoaded} from "../actions";
 
-const Constructor = ({name, fields, addField, setName, id = 27}) => {
+const Constructor = ({name, fields, addField, setName, setIsLoaded, isLoaded, id = 27}) => {
     const onFormNameChange = (event, {value}) => setName(value);
+    const saveChangesToServer = () => {
+        fetch(`http://forms-app.brutgroot.com/pzubar/forms/${id}`,
+            {
+                method: "PUT",
+                body: JSON.stringify({name, fields: Object.values(fields)}),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(response => response.json())
+            .then(() => alert("Success!!!"))
+            .catch(alert)
+    };
 
     useEffect(() => {
         fetch(`http://forms-app.brutgroot.com/pzubar/forms/${id}`)
             .then(response => response.json())
             .then(form => {
                 const {fields = [], name = ""} = form;
+
                 fields.forEach(addField);
-                setName(name)
+                setName(name);
+                setIsLoaded(true);
             })
             .catch(alert)
     }, []);
 
     return (
-        <Container>
+
+        <Segment>
+            <Dimmer active={!isLoaded} inverted>
+                <Loader inverted content='Loading'/>
+            </Dimmer>
             <Card fluid>
                 <Card.Content>
                     <Segment>
@@ -37,23 +57,28 @@ const Constructor = ({name, fields, addField, setName, id = 27}) => {
                             )}
                         </Form>
                     </Card.Content>
-                    <Button onClick={() => addField()}>
+                    <Button onClick={() => addField()} fluid primary>
                         Add new field
                     </Button>
                 </Card.Content>
             </Card>
-        </Container>
+            <Button disabled={!isLoaded} onClick={saveChangesToServer} fluid positive>
+                Save Changes
+            </Button>
+        </Segment>
     )
 };
 
 export default connect(
     state => ({
         name: getName(state),
-        fields: getFields(state)
+        fields: getFields(state),
+        isLoaded: state.formConstructor.isLoaded
     }),
     {
         addField,
-        setName
+        setName,
+        setIsLoaded
     }
 )
 (Constructor);

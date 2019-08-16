@@ -8,3 +8,4 @@ export const addOption = createAction("CONSTRUCTOR::ADD_OPTION");
 export const removeOption = createAction("CONSTRUCTOR::REMOVE_OPTION");
 export const changeFieldType = createAction("CONSTRUCTOR::CHANGE_FIELD_TYPE");
 export const setFieldLabel = createAction("CONSTRUCTOR::SET_FIELD_LABEL");
+export const setIsLoaded = createAction("CONSTRUCTOR::SET_IS_LOADED");

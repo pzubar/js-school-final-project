@@ -7,12 +7,14 @@ import {
     removeOption,
     changeFieldType,
     setOptionName,
-    setFieldLabel
+    setFieldLabel,
+    setIsLoaded
 } from "./actions";
 import uid from 'uniqid';
 
 export const initialState = {
     name: "Unnamed Form",
+    isLoaded: false,
     fields: {}
 };
 
@@ -88,7 +90,7 @@ export default handleActions(
                 }
             }
         }),
-        [setFieldLabel]: (state, {payload}) => console.log(payload) || ({
+        [setFieldLabel]: (state, {payload}) => ({
             ...state,
             fields: {
                 ...state.fields,
@@ -97,6 +99,10 @@ export default handleActions(
                     label: payload.value
                 }
             }
+        }),
+        [setIsLoaded]: (state, {payload}) => ({
+            ...state,
+            isLoaded: payload
         }),
     },
     initialState

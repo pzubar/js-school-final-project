@@ -1,11 +1,11 @@
 import React from 'react';
-import {Dropdown, Grid, Input, Segment} from "semantic-ui-react";
+import {Dropdown, Grid, Input, Segment, Button} from "semantic-ui-react";
 import {connect} from "react-redux";
 import {addOption, setOptionName, removeOption, removeField, changeFieldType, setFieldLabel} from "../actions";
 import FieldContent from "./FieldContent.jsx";
 import {FIELD_TYPES} from "../constants/fieldTypes";
 
-const FieldCard = ({changeFieldType, setFieldLabel, ...props}) => (
+const FieldCard = ({changeFieldType, removeField, setFieldLabel, ...props}) => (
     <Segment.Group>
         <Segment>
             <Grid columns={2} stackable>
@@ -34,6 +34,9 @@ const FieldCard = ({changeFieldType, setFieldLabel, ...props}) => (
         <Segment>
             <FieldContent {...props}/>
         </Segment>
+        <Button attached='bottom' onClick={() => removeField(props.id)}>
+            Remove Field
+        </Button>
     </Segment.Group>
 );
 
