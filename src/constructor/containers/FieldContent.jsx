@@ -1,32 +1,36 @@
 import React from 'react';
 import {Button, Form, Input, Radio, Select, TextArea, Segment, List} from 'semantic-ui-react'
 
-const FieldContent = ({id, type, name, options = [], addOption, label, ...props}) => {
+const FieldContent = (props) => {
+    const {id, type, name, options = [], addOption, removeOption, setOptionName, label} = props;
+
     switch (type) {
         case "input":
         case "number":
-            return <Form.Field fluid control={Input} type={type} disabled {...props} />;
+            return <Form.Field fluid control={Input} type={type} disabled label={label}/>;
         case "text":
-            return <Form.TextArea disabled {...props}/>;
+            return <Form.TextArea disabled label={label}/>;
         case "dropdown":
         case "radio":
         case "check":
             return <List>
-                {options.map(({name, value}) =>
+                {options.map(({name, value}, index) =>
                     <List.Item key={value}>
                         {options.length !== 1 &&
                         <List.Content floated='right'>
                             <Button
-                                onClick={() => {
-                                }}>
+                                onClick={() => removeOption({id, value})}>
                                 X
                             </Button>
                         </List.Content>}
                         <List.Item>
-                            <Input fluid
-                                   value={name}
-                                   onChange={() => {
-                                   }}
+                            <Input
+                                error={!name}
+                                fluid
+                                value={name}
+                                onChange={(event, {value: name}) => {
+                                    setOptionName({id, value, name})
+                                }}
                             />
                         </List.Item>
                     </List.Item>

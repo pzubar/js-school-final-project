@@ -1,16 +1,22 @@
 import React from 'react';
-import {Dropdown, Grid, Input, Form, Card, Segment} from "semantic-ui-react";
+import {Dropdown, Grid, Input, Segment} from "semantic-ui-react";
 import {connect} from "react-redux";
-import {addOption, addField} from "../actions";
+import {addOption, setOptionName, removeOption, removeField, changeFieldType, setFieldLabel} from "../actions";
 import FieldContent from "./FieldContent.jsx";
 import {FIELD_TYPES} from "../constants/fieldTypes";
 
-const FieldCard = (props) => (
+const FieldCard = ({changeFieldType, setFieldLabel, ...props}) => (
     <Segment.Group>
         <Segment>
             <Grid columns={2} stackable>
                 <Grid.Column>
-                    <Input transparent fluid placeholder={'Question label'} value={props.label}/>
+                    <Input
+                        transparent
+                        fluid
+                        placeholder={'Question label'}
+                        onChange={(event, {value}) => setFieldLabel({id: props.id, value})}
+                        value={props.label}
+                    />
                 </Grid.Column>
                 <Grid.Column>
                     <Dropdown
@@ -20,23 +26,25 @@ const FieldCard = (props) => (
                         button
                         options={FIELD_TYPES}
                         value={props.type}
+                        onChange={(event, {value}) => changeFieldType({id: props.id, value})}
                     />
                 </Grid.Column>
             </Grid>
         </Segment>
-        <FieldContent {...props}/>
+        <Segment>
+            <FieldContent {...props}/>
+        </Segment>
     </Segment.Group>
 );
 
 export default connect(
-    // state => ({
-    //     title: getTitle(state),
-    //     type: getType(state)
-    // }),
     null,
     {
-        // setTitle: setQuestionTitle,
-        // setType: changeType,
-        addOption
+        setOptionName,
+        changeFieldType,
+        removeField,
+        removeOption,
+        addOption,
+        setFieldLabel
     }
 )(FieldCard);

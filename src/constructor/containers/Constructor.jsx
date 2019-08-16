@@ -1,54 +1,22 @@
-import React, {useEffect} from 'react'
-import {Container, Card, Grid, Input, Dropdown, Header, Form, Segment} from 'semantic-ui-react'
+import React, {useEffect} from 'react';
+import {Container, Card, Input, Button, Form, Segment} from 'semantic-ui-react';
 import {connect} from "react-redux";
 import {getFields, getName} from "../selectors";
 import FieldCard from "./FieldCard";
 import {addField, setName} from "../actions";
 
-const Constructor = ({name, fields, addField, setName}) => {
+const Constructor = ({name, fields, addField, setName, id = 27}) => {
+    const onFormNameChange = (event, {value}) => setName(value);
+
     useEffect(() => {
-        fetch('http://forms-app.brutgroot.com/pzubar/forms/27')
+        fetch(`http://forms-app.brutgroot.com/pzubar/forms/${id}`)
             .then(response => response.json())
             .then(form => {
-                // debugger;
                 const {fields = [], name = ""} = form;
                 fields.forEach(addField);
                 setName(name)
             })
-            .catch((e) => {
-                const form = {
-                    "id": 1,
-                    "name": "JS School Form",
-                    "fields": [
-                        {
-                            "type": "text",
-                            "name": "Name",
-                            "label": "Name",
-                            "placeholder": ""
-                        },
-                        {
-                            "type": "dropdown",
-                            "name": "Gender",
-                            "label": "Gender",
-                            "placeholder": ""
-                        },
-                        {
-                            "type": "number",
-                            "name": "Homeworks done",
-                            "label": "Homeworks done",
-                            "placeholder": ""
-                        },
-                        {
-                            "type": "number",
-                            "name": "Rating",
-                            "label": "Rating",
-                            "placeholder": ""
-                        }
-                    ]
-                };
-                const {fields = []} = form;
-                fields.forEach(addField);
-            })
+            .catch(alert)
     }, []);
 
     return (
@@ -56,7 +24,11 @@ const Constructor = ({name, fields, addField, setName}) => {
             <Card fluid>
                 <Card.Content>
                     <Segment>
-                        <Card.Header><Header as='h1'>{name}</Header></Card.Header>
+                        <Card.Header>
+                            <Input
+                                error={!name} label='Form Name' size='large' value={name}
+                                onChange={onFormNameChange}/>
+                        </Card.Header>
                     </Segment>
                     <Card.Content>
                         <Form>
@@ -65,12 +37,14 @@ const Constructor = ({name, fields, addField, setName}) => {
                             )}
                         </Form>
                     </Card.Content>
+                    <Button onClick={() => addField()}>
+                        Add new field
+                    </Button>
                 </Card.Content>
             </Card>
         </Container>
     )
 };
-
 
 export default connect(
     state => ({

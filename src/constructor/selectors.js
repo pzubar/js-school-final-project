@@ -1,3 +1,3 @@
-export const getFields = state => state.constructor.fields || {};
+export const getFields = state => state.formConstructor.fields || {};
 export const getFieldsList = state => Object.values(getFields(state));
-export const getName = state => state.constructor.name || "";
+export const getName = state => state.formConstructor.name || "";

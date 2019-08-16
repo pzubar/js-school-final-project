@@ -1,6 +1,14 @@
 import {handleActions} from "redux-actions";
-import {addField, removeField, setName, addOption} from "./actions";
-// import { include, exclude } from "../helper";
+import {
+    addField,
+    removeField,
+    setName,
+    addOption,
+    removeOption,
+    changeFieldType,
+    setOptionName,
+    setFieldLabel
+} from "./actions";
 import uid from 'uniqid';
 
 export const initialState = {
@@ -8,9 +16,9 @@ export const initialState = {
     fields: {}
 };
 
-const form = handleActions(
+export default handleActions(
     {
-        [addField]: (state, {payload}) => ({
+        [addField]: (state, {payload = {type: "input", label: ''}}) => ({
             ...state,
             fields: {
                 ...state.fields,
@@ -18,12 +26,6 @@ const form = handleActions(
             }
         }),
         [removeField]: (state, {payload}) => ({
-            // const {[payload]: undefined, ...newStateQuantity} = state.quantity;
-            // return {
-            //     ...state,
-            //     productIds: exclude(state.productIds, payload),
-            //     quantity: newStateQuantity
-            // };
             ...state,
             fields: {
                 ...state.fields,
@@ -47,9 +49,55 @@ const form = handleActions(
                         }]
                 }
             }
-        })
+        }),
+        [removeOption]: (state, {payload}) => ({
+            ...state,
+            fields: {
+                ...state.fields,
+                [payload.id]: {
+                    ...state.fields[payload.id],
+                    options: state.fields[payload.id].options
+                        .filter(({value}) => value !== payload.value),
+                }
+            }
+        }),
+        [setOptionName]: (state, {payload}) => ({
+            ...state,
+            fields: {
+                ...state.fields,
+                [payload.id]: {
+                    ...state.fields[payload.id],
+                    options: state.fields[payload.id].options
+                        .map(option => option.value === payload.value ?
+                            {...option, name: payload.name} : option),
+                }
+            }
+        }),
+        [changeFieldType]: (state, {payload}) => ({
+            ...state,
+            fields: {
+                ...state.fields,
+                [payload.id]: {
+                    ...state.fields[payload.id],
+                    type: payload.value,
+                    options: ["dropdown", "check", "radio"].includes(payload.value) ?
+                        state.fields[payload.id].options || [{
+                            name: "Option 1",
+                            value: uid()
+                        }] : undefined
+                }
+            }
+        }),
+        [setFieldLabel]: (state, {payload}) => console.log(payload) || ({
+            ...state,
+            fields: {
+                ...state.fields,
+                [payload.id]: {
+                    ...state.fields[payload.id],
+                    label: payload.value
+                }
+            }
+        }),
     },
     initialState
 );
-
-export default form;

@@ -25,7 +25,7 @@ export const FIELD_TYPES = [
     },
     {
         key: 'check',
-        text: 'Text',
+        text: 'Chekmark',
         value: 'check',
         icon: 'checkmark box'
     },
