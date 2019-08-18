@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dropdown, Grid, Input, Segment, Button} from "semantic-ui-react";
+import {Dropdown, Grid, Input, Segment, Button, Icon} from "semantic-ui-react";
 import {connect} from "react-redux";
 import {addOption, setOptionName, removeOption, removeField, changeFieldType, setFieldLabel} from "../actions";
 import FieldContent from "./FieldContent.jsx";
@@ -19,24 +19,33 @@ const FieldCard = ({changeFieldType, removeField, setFieldLabel, ...props}) => (
                     />
                 </Grid.Column>
                 <Grid.Column>
-                    <Dropdown
-                        placeholder='Select type'
-                        fluid
-                        selection
-                        button
-                        options={FIELD_TYPES}
-                        value={props.type}
-                        onChange={(event, {value}) => changeFieldType({id: props.id, value})}
-                    />
+                    <Grid>
+                        <Grid.Column width={12}>
+                            <Dropdown
+                                placeholder='Select type'
+                                fluid
+                                selection
+                                button
+                                options={FIELD_TYPES}
+                                value={props.type}
+                                onChange={(event, {value}) => changeFieldType({id: props.id, value})}
+                            />
+                        </Grid.Column>
+                        <Grid.Column width={4}>
+                            <Button animated='vertical' fluid onClick={() => removeField(props.id)}>
+                                <Button.Content hidden>Remove</Button.Content>
+                                <Button.Content visible>
+                                    <Icon name='trash alternate'/>
+                                </Button.Content>
+                            </Button>
+                        </Grid.Column>
+                    </Grid>
                 </Grid.Column>
             </Grid>
         </Segment>
         <Segment>
             <FieldContent {...props}/>
         </Segment>
-        <Button attached='bottom' onClick={() => removeField(props.id)}>
-            Remove Field
-        </Button>
     </Segment.Group>
 );
 

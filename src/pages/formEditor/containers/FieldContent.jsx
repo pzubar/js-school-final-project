@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Form, Input, Radio, Select, TextArea, Segment, List} from 'semantic-ui-react'
+import {Button, Form, Input, Radio, Select, TextArea, Segment, List, Icon} from 'semantic-ui-react'
 
 const FieldContent = (props) => {
     const {id, type, name, options = [], addOption, removeOption, setOptionName, label} = props;
@@ -35,8 +35,9 @@ const FieldContent = (props) => {
                         </List.Item>
                     </List.Item>
                 )}
-                <Button secondary
+                <Button secondary basic color='teal' fluid icon
                         onClick={() => addOption(id)}>
+                    <Icon name={"plus square"}/>
                     Add Option
                 </Button>
             </List>;

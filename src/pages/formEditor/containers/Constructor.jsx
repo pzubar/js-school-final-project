@@ -1,11 +1,14 @@
 import React, {useEffect} from 'react';
-import {Card, Input, Button, Form, Segment, Dimmer, Loader} from 'semantic-ui-react';
+import {Card, Input, Button, Form, Segment, Dimmer, Loader, Icon} from 'semantic-ui-react';
 import {connect} from "react-redux";
-import {getFields, getName} from "../selectors";
+import {getFields, getName, getIsLoaded, getFieldsList} from "../selectors";
 import FieldCard from "./FieldCard";
-import {addField, setName, setIsLoaded} from "../actions";
+import {addField, setName} from "../actions";
+import {getFormById} from "../thunks";
+import {MAX_FIELDS} from "../constants";
 
-const Constructor = ({name, fields, addField, setName, setIsLoaded, isLoaded, id = 27}) => {
+const Constructor = (props) => {
+    const {getFormById, name, fields, addField, setName, isLoaded, id = 27, fieldsList} = props;
     const onFormNameChange = (event, {value}) => setName(value);
     const saveChangesToServer = () => {
         fetch(`http://forms-app.brutgroot.com/pzubar/forms/${id}`,
@@ -23,16 +26,8 @@ const Constructor = ({name, fields, addField, setName, setIsLoaded, isLoaded, id
     };
 
     useEffect(() => {
-        fetch(`http://forms-app.brutgroot.com/pzubar/forms/${id}`)
-            .then(response => response.json())
-            .then(form => {
-                const {fields = [], name = ""} = form;
-
-                fields.forEach(addField);
-                setName(name);
-                setIsLoaded(true);
-            })
-            .catch(alert)
+        window.document.title = "Form Editor";
+        getFormById(id);
     }, []);
 
     return (
@@ -57,7 +52,11 @@ const Constructor = ({name, fields, addField, setName, setIsLoaded, isLoaded, id
                             )}
                         </Form>
                     </Card.Content>
-                    <Button onClick={() => addField()} fluid primary>
+                    <Button
+                        attached='bottom' onClick={() => addField()} primary
+                        disabled={fieldsList.length === MAX_FIELDS}
+                       fluid
+                    >
                         Add new field
                     </Button>
                 </Card.Content>
@@ -73,12 +72,13 @@ export default connect(
     state => ({
         name: getName(state),
         fields: getFields(state),
-        isLoaded: state.formConstructor.isLoaded
+        isLoaded: getIsLoaded(state),
+        fieldsList: getFieldsList(state)
     }),
     {
         addField,
         setName,
-        setIsLoaded
+        getFormById
     }
 )
 (Constructor);

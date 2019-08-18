@@ -1,8 +1,8 @@
-import formConstructor from "./constructor/reducer";
+import formEditor from "./pages/formEditor/reducer";
 import {combineReducers} from "redux";
 
 const reducers = combineReducers({
-    formConstructor
+    formEditor
 });
 
 export default reducers;
