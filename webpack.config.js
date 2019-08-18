@@ -4,11 +4,6 @@ const path = require('path');
 module.exports = {
     mode: 'development',
     entry: path.resolve(__dirname, './src/index.js'),
-    // output: {
-    //     path: path.resolve(__dirname, './src/server/public'),
-    //     filename: "bundle.js",
-    //     sourceMapFilename: 'bundle.map'
-    // },
     devServer: {
         contentBase: '.',
     },
@@ -27,22 +22,17 @@ module.exports = {
                 test: /\.(woff(2)?|ttf|eot|otf)(\?v=\d+\.\d+\.\d+)?$/,
                 use: [{
                     loader: 'file-loader',
-                    // options: {
-                    //     name: '[name].[ext]',
-                    //     outputPath: 'fonts/'
-                    // }
                 }]
             },            {
                 test: /\.(gif|png|jpe?g|svg)$/i,
                 use: [{
                     loader: 'file-loader',
-                    // options: {
-                    //     name: '[name].[ext]',
-                    //     outputPath: 'img/'
-                    // }
                 }]
             },
         ]
+    },
+    resolve: {
+        extensions: ['.js', '.jsx'],
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -51,14 +41,3 @@ module.exports = {
         })
     ],
 };
-
-// const path = require('path');
-//
-// module.exports = {
-//     entry: path.resolve(__dirname, './src/index.js'),
-//     devServer: {
-//         contentBase: '.',
-//         compress: true,
-//         port: 9000
-//     }
-// };

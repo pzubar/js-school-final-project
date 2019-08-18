@@ -1,3 +1,3 @@
-import Constructor from "./containers/Constructor.jsx"
+import FormEditor from "./containers/FormEditor.jsx"
 
-export default Constructor;
+export default FormEditor;

@@ -12,16 +12,16 @@ export const FIELD_TYPES = [
         icon: 'sort numeric down'
     },
     {
-        key: 'dropdown',
-        text: 'Dropdown',
-        value: 'dropdown',
-        icon: 'filter'
-    },
-    {
         key: 'text',
         text: 'Text',
         value: 'text',
         icon: 'align justify'
+    },
+    {
+        key: 'dropdown',
+        text: 'Dropdown',
+        value: 'dropdown',
+        icon: 'filter'
     },
     {
         key: 'check',

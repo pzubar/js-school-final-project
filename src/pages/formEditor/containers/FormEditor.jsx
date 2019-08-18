@@ -7,8 +7,10 @@ import {addField, setName} from "../actions";
 import {getFormById} from "../thunks";
 import {MAX_FIELDS} from "../constants";
 
-const Constructor = (props) => {
-    const {getFormById, name, fields, addField, setName, isLoaded, id = 27, fieldsList} = props;
+const FormEditor = (props) => {
+    const {getFormById, name, fields, addField, setName, isLoaded, fieldsList, match} = props;
+    const {params} = match;
+    const {id} = params;
     const onFormNameChange = (event, {value}) => setName(value);
     const saveChangesToServer = () => {
         fetch(`http://forms-app.brutgroot.com/pzubar/forms/${id}`,
@@ -31,7 +33,6 @@ const Constructor = (props) => {
     }, []);
 
     return (
-
         <Segment>
             <Dimmer active={!isLoaded} inverted>
                 <Loader inverted content='Loading'/>
@@ -55,7 +56,7 @@ const Constructor = (props) => {
                     <Button
                         attached='bottom' onClick={() => addField()} primary
                         disabled={fieldsList.length === MAX_FIELDS}
-                       fluid
+                        fluid
                     >
                         Add new field
                     </Button>
@@ -81,4 +82,4 @@ export default connect(
         getFormById
     }
 )
-(Constructor);
+(FormEditor);

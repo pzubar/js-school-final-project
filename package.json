@@ -4,10 +4,14 @@
   "description": "Final project in PDFfiller JS school",
   "main": "index.js",
   "repository": "https://github.com/pzubar/js-school-final-project.git",
+  "homepage":"https://pzubar.github.io/js-school-final-project",
   "author": "pzubar <pmzubar@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server",
+    "build": "webpack",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@babel/preset-env": "^7.5.5",
