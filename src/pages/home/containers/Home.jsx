@@ -17,9 +17,10 @@ const HomePage = memo((props) => {
         window.document.title = "Home";
     }, []);
 
-    return (<Segment placeholder style={{height: "100vh"}}>
-        <Grid columns={3} stackable textAlign='center'>
-            <Grid.Row verticalAlign='middle'>
+    return (
+        <Segment placeholder style={{height: "100vh"}}>
+        <Grid columns={3} divided relaxed stackable textAlign='center'>
+            <Grid.Row columns={3} verticalAlign='middle'>
                 <Grid.Column>
                     <Header icon>
                         <Icon name='edit'/>

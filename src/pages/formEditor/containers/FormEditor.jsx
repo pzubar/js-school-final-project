@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Card, Input, Button, Form, Segment, Dimmer, Loader, Icon} from 'semantic-ui-react';
+import {Card, Input, Button, Form, Segment, Dimmer, Loader, Icon, Responsive} from 'semantic-ui-react';
 import {connect} from "react-redux";
 import {getFields, getName, getIsLoaded, getFieldsList} from "../selectors";
 import FieldCard from "./FieldCard";
@@ -25,7 +25,7 @@ const FormEditor = (props) => {
     }, []);
 
     return (
-        <Segment>
+        <Responsive as={Segment}>
             <Dimmer active={!isLoaded} inverted>
                 <Loader inverted content='Loading'/>
             </Dimmer>
@@ -57,7 +57,7 @@ const FormEditor = (props) => {
             <Button disabled={!isLoaded} onClick={saveChangesToServer} fluid positive>
                 Save Changes
             </Button>
-        </Segment>
+        </Responsive>
     )
 };
 
