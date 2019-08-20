@@ -11,6 +11,7 @@ import {
     setIsLoaded
 } from "./actions";
 import uid from 'uniqid';
+import {INITIAL_FIELD_DATA} from "./constants";
 
 export const initialState = {
     name: "Unnamed Form",
@@ -20,7 +21,7 @@ export const initialState = {
 
 export default handleActions(
     {
-        [addField]: (state, {payload = {type: "input", label: ''}}) => ({
+        [addField]: (state, {payload = INITIAL_FIELD_DATA}) => ({
             ...state,
             fields: {
                 ...state.fields,
@@ -86,7 +87,7 @@ export default handleActions(
                         state.fields[payload.id].options || [{
                             name: "Option 1",
                             value: uid()
-                        }] : undefined
+                        }] : []
                 }
             }
         }),

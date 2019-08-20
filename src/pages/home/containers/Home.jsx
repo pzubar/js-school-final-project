@@ -1,18 +1,20 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, memo} from "react";
 import {Button, Grid, Header, Icon, Segment, Feed, Dimmer, Loader} from 'semantic-ui-react'
 import {Link} from "react-router-dom";
-import {API_PATH} from "../../../constants";
+import {connect} from "react-redux";
+import {addForm, setLoadedData} from "../../../actions";
+import {FORMS, FILLS} from "../../../constants";
+import {getAreFormsLoaded, getAreFillsLoaded, getFormsList, getFillsList} from "../../../selectors";
+import {loadFormsList} from "../../../models"
+import {requestDeleteForm} from "../../../actions/thunks";
 
-const HomePage = () => {
-    const [formsList, setFormsList] = useState([]);
-    const [isLoaded, setIsLoaded] = useState(false);
+const HomePage = memo((props) => {
+    const {setLoadedData, addForm, areFormsLoaded, formsList, deleteForm} = props;
 
     useEffect(() => {
-        fetch(`${API_PATH}/forms/list`)
-            .then(response => response.json())
-            .then(setFormsList)
-            .catch(alert)
-            .finally(() => setIsLoaded(true))
+        if (!areFormsLoaded)
+            loadFormsList().then(forms => forms.forEach(addForm)).finally(() => setLoadedData(FORMS))
+        window.document.title = "Home";
     }, []);
 
     return (<Segment placeholder style={{height: "100vh"}}>
@@ -24,7 +26,7 @@ const HomePage = () => {
                         Edit Forms
                     </Header>
                     <Segment style={{minHeight: 100}}>
-                        <Dimmer active={!isLoaded}>
+                        <Dimmer active={!areFormsLoaded}>
                             <Loader/>
                         </Dimmer>
                         <Feed>
@@ -35,7 +37,24 @@ const HomePage = () => {
                                         date={`Fields: ${fields}`}
                                         summary={name}
                                     />
-                                    <Link to={`/edit/${id}`}> <Icon name={"edit"}/> Edit</Link>
+                                    <Button.Group size={'tiny'}>
+                                        <Link to={`/form/e/${id}`}>
+                                            <Button animated='vertical'>
+                                                <Button.Content hidden>Edit</Button.Content>
+                                                <Button.Content visible>
+                                                    <Icon name='edit'/>
+                                                </Button.Content>
+                                            </Button>
+                                        </Link>
+                                        <Button.Or/>
+                                        <Button negative animated='vertical' onClick={() => deleteForm(id)}>
+                                            <Button.Content hidden>Delete</Button.Content>
+                                            <Button.Content visible>
+                                                <Icon name='trash'/>
+                                            </Button.Content>
+                                        </Button>
+                                        {/*<Button negative >X</Button>*/}
+                                    </Button.Group>
                                 </Feed.Event>
                             ))}
                         </Feed>
@@ -46,7 +65,9 @@ const HomePage = () => {
                         <Icon name='plus circle'/>
                         Create new form
                     </Header>
-                    <Button primary disabled>Create</Button>
+                    <Link to={`/form/new`}>
+                        <Button primary>Create</Button>
+                    </Link>
                 </Grid.Column>
                 <Grid.Column>
                     <Header icon>
@@ -58,6 +79,18 @@ const HomePage = () => {
             </Grid.Row>
         </Grid>
     </Segment>)
-};
+});
 
-export default HomePage
+export default connect(
+    state => ({
+        formsList: getFormsList(state),
+        fillsList: getFillsList(state),
+        areFormsLoaded: getAreFormsLoaded(state),
+        areFillsLoaded: getAreFillsLoaded(state)
+    }),
+    {
+        setLoadedData,
+        addForm,
+        deleteForm: requestDeleteForm
+    }
+)(HomePage);

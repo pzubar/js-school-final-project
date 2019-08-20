@@ -4,32 +4,24 @@ import {connect} from "react-redux";
 import {getFields, getName, getIsLoaded, getFieldsList} from "../selectors";
 import FieldCard from "./FieldCard";
 import {addField, setName} from "../actions";
-import {getFormById} from "../thunks";
+import {getForm, createForm} from "../thunks";
 import {MAX_FIELDS} from "../constants";
+import {editFormById} from "../../../models";
+import {requestDeleteForm} from "../../../actions/thunks";
+import {showErrorMessage, showInfoMessage} from "../../../helpers/messages";
 
 const FormEditor = (props) => {
-    const {getFormById, name, fields, addField, setName, isLoaded, fieldsList, match} = props;
+    const {getForm, name, fields, addField, setName, isLoaded, fieldsList, match, createId, createForm} = props;
     const {params} = match;
     const {id} = params;
     const onFormNameChange = (event, {value}) => setName(value);
     const saveChangesToServer = () => {
-        fetch(`http://forms-app.brutgroot.com/pzubar/forms/${id}`,
-            {
-                method: "PUT",
-                body: JSON.stringify({name, fields: Object.values(fields)}),
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-            })
-            .then(response => response.json())
-            .then(() => alert("Success!!!"))
-            .catch(alert)
+        editFormById(id || createId, name, Object.values(fields)).then(showInfoMessage).catch(showErrorMessage);
     };
 
     useEffect(() => {
-        window.document.title = "Form Editor";
-        getFormById(id);
+        if (id) getForm(id);
+        else createForm(createId)
     }, []);
 
     return (
@@ -79,7 +71,9 @@ export default connect(
     {
         addField,
         setName,
-        getFormById
+        getForm,
+        createForm,
+        deleteForm: requestDeleteForm
     }
 )
 (FormEditor);

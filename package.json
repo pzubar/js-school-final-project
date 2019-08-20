@@ -4,19 +4,18 @@
   "description": "Final project in PDFfiller JS school",
   "main": "index.js",
   "repository": "https://github.com/pzubar/js-school-final-project.git",
-  "homepage":"https://pzubar.github.io/js-school-final-project",
+  "homepage": "https://pzubar.github.io/js-school-final-project",
   "author": "pzubar <pmzubar@gmail.com>",
   "license": "MIT",
   "scripts": {
     "start": "webpack-dev-server",
-    "build": "webpack",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "build": "webpack"
   },
   "dependencies": {
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.6",
+    "firebase": "^6.4.0",
     "html-webpack-plugin": "^3.2.0",
     "pnotify": "^4.0.0",
     "postcss-loader": "^3.0.0",
