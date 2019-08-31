@@ -9,7 +9,8 @@
   "license": "MIT",
   "scripts": {
     "start": "webpack-dev-server",
-    "build": "webpack"
+    "build": "webpack",
+    "lint": "eslint src -c .eslintrc.json --ext js,jsx"
   },
   "dependencies": {
     "@babel/preset-env": "^7.5.5",
@@ -26,6 +27,7 @@
     "redux": "^4.0.4",
     "redux-actions": "^2.6.5",
     "redux-thunk": "^2.3.0",
+    "reselect": "^4.0.0",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.87.3",
     "uniqid": "^5.0.3"
@@ -33,7 +35,16 @@
   "devDependencies": {
     "@babel/core": "7.0.0",
     "css-loader": "^3.1.0",
+    "eslint": "^6.3.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-prettier": "^6.1.0",
+    "eslint-import-resolver-webpack": "^0.11.1",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-react": "^7.14.3",
     "file-loader": "^4.1.0",
+    "prettier": "^1.18.2",
     "redux-devtools-extension": "^2.13.8",
     "style-loader": "^0.23.1",
     "webpack": "^4.38.0",
