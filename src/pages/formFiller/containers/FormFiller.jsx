@@ -31,7 +31,7 @@ const Filler = ({ match }) => {
 	return (
 		<Responsive as={Segment}>
 			<Dimmer active={!isLoaded} inverted>
-				<Loader inverted content="Loading"/>
+				<Loader inverted content="Loading" />
 			</Dimmer>
 			<Card fluid>
 				<Card.Content>
@@ -46,11 +46,7 @@ const Filler = ({ match }) => {
 				<Card.Content>
 					<Form>
 						{fieldsList.map(key => (
-							<FillCard
-								key={key}
-								id={key}
-								{...fields[key]}
-							/>
+							<FillCard key={key} id={key} {...fields[key]} />
 						))}
 					</Form>
 				</Card.Content>

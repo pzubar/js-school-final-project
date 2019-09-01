@@ -36,3 +36,5 @@ export const FIELD_TYPES = [
 		icon: 'list',
 	},
 ];
+
+export default FIELD_TYPES;

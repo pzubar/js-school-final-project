@@ -68,7 +68,7 @@ const FormEditor = ({ match }) => {
 	return (
 		<Responsive as={Segment}>
 			<Dimmer active={!isLoaded} inverted>
-				<Loader inverted content="Loading"/>
+				<Loader inverted content="Loading" />
 			</Dimmer>
 			<Card fluid>
 				<Card.Content>

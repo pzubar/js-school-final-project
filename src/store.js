@@ -3,3 +3,5 @@ import reducers from './reducers';
 import { middleware } from './middlewares';
 
 export const store = createStore(reducers, {}, middleware);
+
+export default store;

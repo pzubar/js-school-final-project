@@ -12,7 +12,7 @@ import {
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { addForm, setLoadedData } from '../../../actions';
-import { FORMS, FILLS } from '../../../constants';
+import { FORMS } from '../../../constants';
 import {
 	getAreFormsLoaded,
 	getAreFillsLoaded,

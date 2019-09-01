@@ -2,8 +2,8 @@ import { applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const logger = store => next => action => {
-	console.log(store.getState());
+const logger = () => next => action => {
+	// console.log(store.getState());
 
 	return next(action);
 };
