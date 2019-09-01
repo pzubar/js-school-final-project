@@ -1,3 +1,3 @@
-import FormEditor from "./containers/FormEditor.jsx"
+import FormEditor from './containers/FormEditor.jsx';
 
 export default FormEditor;

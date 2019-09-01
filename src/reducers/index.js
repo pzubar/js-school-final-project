@@ -1,10 +1,10 @@
-import formEditor from "../pages/formEditor/reducer";
-import global from "../reducers/global";
-import {combineReducers} from "redux";
+import { combineReducers } from 'redux';
+import formEditor from '../pages/formEditor/reducer';
+import global from './global';
 
 const reducers = combineReducers({
-    formEditor,
-    global
+	formEditor,
+	global,
 });
 
 export default reducers;

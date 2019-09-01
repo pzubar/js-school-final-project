@@ -1,4 +1,4 @@
-import {FORMS, FILLS} from "../constants";
+import { FORMS, FILLS } from '../constants';
 
 export const getLoadedData = state => state.global.loadedData || [];
 export const getAreFormsLoaded = state => getLoadedData(state).includes(FORMS);

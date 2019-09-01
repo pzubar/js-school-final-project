@@ -28,7 +28,7 @@ export const loadFormsList = () => {
 	});
 };
 
-export const createForm = () =>
+export const getNewFormId = () =>
 	database
 		.ref()
 		.child('forms')

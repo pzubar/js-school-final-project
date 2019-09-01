@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback, useReducer, useState } from 'react';
 import {
 	Card,
 	Input,
@@ -10,40 +10,59 @@ import {
 	Responsive,
 } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { getFields, getName, getIsLoaded, getFieldsList } from '../selectors';
-import FieldCard from './FieldCard';
-import { addField, setName } from '../actions';
+import FieldCard from '../components/FieldCard.jsx';
+import {
+	addField,
+	addOption,
+	removeField,
+	removeOption,
+	setName,
+	setOptionName,
+} from '../actions';
 import { getForm, createForm } from '../thunks';
 import { MAX_FIELDS } from '../constants';
-import { editFormById } from '../../../models';
-import { requestDeleteForm } from '../../../actions/thunks';
+import { editFormById, getNewFormId } from '../../../models';
 import { showErrorMessage, showInfoMessage } from '../../../helpers/messages';
+import reducer, { initialState } from '../reducer';
 
-const FormEditor = props => {
-	const {
-		getForm,
-		name,
-		fields,
-		addField,
-		setName,
-		isLoaded,
-		fieldsList,
-		match,
-		createId,
-		createForm,
-	} = props;
+const FormEditor = ({ match }) => {
+	const [state, dispatch] = useReducer(reducer, initialState);
+	const [fieldsNumber, setFieldsNumber] = useState(0);
 	const { params } = match;
 	const { id } = params;
-	const onFormNameChange = (event, { value }) => setName(value);
-	const saveChangesToServer = () => {
-		editFormById(id || createId, name, Object.values(fields))
+	const { isLoaded, name, fields } = state;
+
+	const onFormNameChange = useCallback((event, { value }) => {
+		dispatch(setName(value));
+	}, []);
+
+	const saveChangesToServer = useCallback(() => {
+		editFormById(id, name, Object.values(fields))
 			.then(showInfoMessage)
 			.catch(showErrorMessage);
-	};
+	}, [id, name, fields]);
+
+	const onOptionNameChange = useCallback(
+		data => dispatch(setOptionName(data)),
+		[],
+	);
+	const onFieldAddClick = useCallback(() => dispatch(addField()), []);
+	const onFieldRemoveClick = useCallback(
+		data => dispatch(removeField(data)),
+		[],
+	);
+	const onOptionRemove = useCallback(
+		data => dispatch(removeOption(data)),
+		[],
+	);
+	const onOptionAdd = useCallback(data => dispatch(addOption(data)), []);
+	useEffect(() => {
+		setFieldsNumber(Object.keys(fields).length);
+	}, [fields]);
 
 	useEffect(() => {
-		if (id) getForm(id);
-		else createForm(createId);
+		if (id) getForm(id)(dispatch);
+		else createForm(getNewFormId())(dispatch);
 	}, []);
 
 	return (
@@ -70,6 +89,11 @@ const FormEditor = props => {
 								<FieldCard
 									key={key}
 									id={key}
+									setOptionName={onOptionNameChange}
+									removeField={onFieldRemoveClick}
+									removeOption={onOptionRemove}
+									addOption={onOptionAdd}
+									dispatch={dispatch}
 									{...fields[key]}
 								/>
 							))}
@@ -77,9 +101,9 @@ const FormEditor = props => {
 					</Card.Content>
 					<Button
 						attached="bottom"
-						onClick={() => addField()}
+						onClick={onFieldAddClick}
 						primary
-						disabled={fieldsList.length === MAX_FIELDS}
+						disabled={fieldsNumber === MAX_FIELDS}
 						fluid
 					>
 						Add new field
@@ -99,17 +123,6 @@ const FormEditor = props => {
 };
 
 export default connect(
-	state => ({
-		name: getName(state),
-		fields: getFields(state),
-		isLoaded: getIsLoaded(state),
-		fieldsList: getFieldsList(state),
-	}),
-	{
-		addField,
-		setName,
-		getForm,
-		createForm,
-		deleteForm: requestDeleteForm,
-	},
+	state => state,
+	{},
 )(FormEditor);

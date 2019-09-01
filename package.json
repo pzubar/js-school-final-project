@@ -10,7 +10,7 @@
   "scripts": {
     "start": "webpack-dev-server",
     "build": "webpack",
-    "lint": "eslint src -c .eslintrc.json --ext js,jsx"
+    "lint": "eslint src -c .eslintrc --ext js,jsx"
   },
   "dependencies": {
     "@babel/preset-env": "^7.5.5",
