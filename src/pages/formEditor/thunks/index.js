@@ -10,7 +10,8 @@ export const getForm = id => dispatch => {
 	getFormById(id)
 		.then(form => {
 			const { fields = [], name = '' } = form;
-
+			console.log(fields, name);
+			debugger;
 			fields.forEach(field => dispatch(addField(field)));
 			dispatch(setName(name));
 			dispatch(setIsLoaded(true));

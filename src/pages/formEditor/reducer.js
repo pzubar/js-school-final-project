@@ -48,7 +48,7 @@ export default handleActions(
 					options: [
 						...state.fields[payload].options,
 						{
-							name: `Option ${state.fields[payload].options
+							text: `Option ${state.fields[payload].options
 								.length + 1}`,
 							value: uid(),
 						},

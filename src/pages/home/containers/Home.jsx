@@ -41,12 +41,12 @@ const HomePage = memo(props => {
 
 	return (
 		<Segment placeholder style={{ height: '100vh' }}>
-			<Grid columns={3} divided relaxed stackable textAlign="center">
-				<Grid.Row columns={3} verticalAlign="middle">
+			<Grid columns={2} divided relaxed stackable textAlign="center">
+				<Grid.Row columns={2} verticalAlign="middle">
 					<Grid.Column>
 						<Header icon>
 							<Icon name="edit" />
-							Edit Forms
+							My Forms
 						</Header>
 						<Segment style={{ minHeight: 100 }}>
 							<Dimmer active={!areFormsLoaded}>
@@ -75,6 +75,17 @@ const HomePage = memo(props => {
 												</Button>
 											</Link>
 											<Button.Or />
+											<Link to={`/form/f/${id}`}>
+												<Button animated="vertical">
+													<Button.Content hidden>
+														Share
+													</Button.Content>
+													<Button.Content visible>
+														<Icon name="share" />
+													</Button.Content>
+												</Button>
+											</Link>
+											<Button.Or />
 											<Button
 												negative
 												animated="vertical"
@@ -87,21 +98,16 @@ const HomePage = memo(props => {
 													<Icon name="trash" />
 												</Button.Content>
 											</Button>
-											{/* <Button negative >X</Button> */}
 										</Button.Group>
 									</Feed.Event>
 								))}
+								<Link to="/form/new">
+									<Button fluid primary>
+										Create new form
+									</Button>
+								</Link>
 							</Feed>
 						</Segment>
-					</Grid.Column>
-					<Grid.Column>
-						<Header icon>
-							<Icon name="plus circle" />
-							Create new form
-						</Header>
-						<Link to="/form/new">
-							<Button primary>Create</Button>
-						</Link>
 					</Grid.Column>
 					<Grid.Column>
 						<Header icon>

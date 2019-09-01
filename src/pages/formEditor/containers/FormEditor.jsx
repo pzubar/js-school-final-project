@@ -27,7 +27,7 @@ import reducer, { initialState } from '../reducer';
 
 const FormEditor = ({ match }) => {
 	const [state, dispatch] = useReducer(reducer, initialState);
-	const [fieldsNumber, setFieldsNumber] = useState(0);
+	const [fieldsList, setFieldsList] = useState([]);
 	const { params } = match;
 	const { id } = params;
 	const { isLoaded, name, fields } = state;
@@ -57,7 +57,7 @@ const FormEditor = ({ match }) => {
 	);
 	const onOptionAdd = useCallback(data => dispatch(addOption(data)), []);
 	useEffect(() => {
-		setFieldsNumber(Object.keys(fields).length);
+		setFieldsList(Object.keys(fields));
 	}, [fields]);
 
 	useEffect(() => {
@@ -68,7 +68,7 @@ const FormEditor = ({ match }) => {
 	return (
 		<Responsive as={Segment}>
 			<Dimmer active={!isLoaded} inverted>
-				<Loader inverted content="Loading" />
+				<Loader inverted content="Loading"/>
 			</Dimmer>
 			<Card fluid>
 				<Card.Content>
@@ -85,7 +85,7 @@ const FormEditor = ({ match }) => {
 					</Segment>
 					<Card.Content>
 						<Form>
-							{Object.keys(fields).map(key => (
+							{fieldsList.map(key => (
 								<FieldCard
 									key={key}
 									id={key}
@@ -103,7 +103,7 @@ const FormEditor = ({ match }) => {
 						attached="bottom"
 						onClick={onFieldAddClick}
 						primary
-						disabled={fieldsNumber === MAX_FIELDS}
+						disabled={fieldsList.length === MAX_FIELDS}
 						fluid
 					>
 						Add new field
