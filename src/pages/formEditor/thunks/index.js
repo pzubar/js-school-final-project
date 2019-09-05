@@ -19,17 +19,14 @@ export const getForm = id => dispatch => {
 };
 
 export const createForm = createId => {
-	return (dispatch, getState) => {
+	return dispatch => {
 		const { name } = initialState;
 		const fields = [INITIAL_FIELD_DATA];
 
 		editFormById(createId, name, fields)
 			.then(() => {
-				const areFormsLoaded = getAreFormsLoaded(getState());
-
 				dispatch(addField(INITIAL_FIELD_DATA));
 				dispatch(setIsLoaded(true));
-				if (areFormsLoaded) addForm({ id: createId, name, fields: 1 });
 				history.pushState(
 					null,
 					null,
@@ -37,6 +34,8 @@ export const createForm = createId => {
 				);
 			})
 			.then(() => showInfoMessage('Form Created'))
-			.catch(showErrorMessage);
+			.catch(error => {
+				showErrorMessage(error);
+			});
 	};
 };
