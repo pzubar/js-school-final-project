@@ -7,9 +7,11 @@ import {
 	Segment,
 	Dimmer,
 	Loader,
-	Responsive,
+	Container,
+	Menu,
 } from 'semantic-ui-react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import FieldCard from '../components/FieldCard';
 import {
 	addField,
@@ -77,7 +79,14 @@ const FormEditor = ({ match }) => {
 	}, [id]);
 
 	return (
-		<Responsive as={Segment}>
+		<Container>
+			<Menu inverted>
+				<Container>
+					<Menu.Item as="a" header>
+						<Link to="/">Home</Link>
+					</Menu.Item>
+				</Container>
+			</Menu>
 			<Dimmer active={!isLoaded} inverted>
 				<Loader inverted content="Loading" />
 			</Dimmer>
@@ -130,7 +139,7 @@ const FormEditor = ({ match }) => {
 			>
 				Save Changes
 			</Button>
-		</Responsive>
+		</Container>
 	);
 };
 
