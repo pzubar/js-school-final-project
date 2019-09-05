@@ -1,10 +1,8 @@
 import { addField, setName, setIsLoaded } from '../actions';
-import { addForm } from '../../../actions';
 import { showErrorMessage, showInfoMessage } from '../../../helpers/messages';
 import { getFormById, editFormById } from '../../../models';
 import { initialState } from '../reducer';
 import { INITIAL_FIELD_DATA } from '../constants';
-import { getAreFormsLoaded } from '../../../selectors';
 
 export const getForm = id => dispatch => {
 	getFormById(id)
@@ -27,7 +25,7 @@ export const createForm = createId => {
 			.then(() => {
 				dispatch(addField(INITIAL_FIELD_DATA));
 				dispatch(setIsLoaded(true));
-				history.pushState(
+				window.history.replaceState(
 					null,
 					null,
 					window.location.href.replace('new', `e/${createId}`),

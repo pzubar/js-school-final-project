@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { store } from './store';
 import Editor from './pages/formEditor/containers/FormEditor';
 import Filler from './pages/formFiller/containers/FormFiller';
-import HomePage from './pages/home';
+import HomePage from './pages/home/containers/Home';
 import 'semantic-ui-css/semantic.min.css';
 
 const rootElement = document.getElementById('root');

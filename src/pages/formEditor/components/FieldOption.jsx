@@ -9,13 +9,13 @@ const FieldOption = props => {
 				id: fieldId,
 				value,
 			}),
-		[fieldId, value],
+		[fieldId, onRemove, value],
 	);
 	const onNameInputChange = useCallback(
 		(event, { value: newName }) => {
 			onNameChange({ id: fieldId, value, name: newName });
 		},
-		[fieldId, value],
+		[fieldId, onNameChange, value],
 	);
 
 	return (

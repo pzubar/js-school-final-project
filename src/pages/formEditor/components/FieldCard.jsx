@@ -9,19 +9,27 @@ import {
 } from 'semantic-ui-react';
 import FieldContent from './FieldContent';
 import { FIELD_TYPES } from '../constants/fieldTypes';
-import { setFieldLabel, changeFieldType } from '../actions';
 
 const FieldCard = props => {
-	const { dispatch, removeField, id, label, type } = props;
-	const onLabelInputChange = useCallback(
-		(event, { value }) => dispatch(setFieldLabel({ id, value })),
-		[id],
+	const {
+		removeField,
+		id,
+		onLabelChange,
+		fieldData,
+		onTypeChange,
+		onOptionAdd,
+		setOptionName,
+		onOptionRemove,
+	} = props;
+	const { label, type, options } = fieldData;
+	const onDropdownChange = useCallback(
+		(event, { value }) => onTypeChange({ id, value }),
+		[id, onTypeChange],
 	);
-	const onFieldTypeChange = useCallback(
-		(event, { value }) => dispatch(changeFieldType({ id, value })),
-		[id],
-	);
-
+	const onFieldRemoveClick = useCallback(() => removeField(id), [
+		id,
+		removeField,
+	]);
 	return (
 		<Segment.Group>
 			<Segment>
@@ -31,7 +39,8 @@ const FieldCard = props => {
 							transparent
 							fluid
 							placeholder="Question label"
-							onChange={onLabelInputChange}
+							name={id}
+							onChange={onLabelChange}
 							value={label}
 						/>
 					</Grid.Column>
@@ -45,14 +54,14 @@ const FieldCard = props => {
 									button
 									options={FIELD_TYPES}
 									value={type}
-									onChange={onFieldTypeChange}
+									onChange={onDropdownChange}
 								/>
 							</Grid.Column>
 							<Grid.Column width={4}>
 								<Button
 									animated="vertical"
 									fluid
-									onClick={() => removeField(props.id)}
+									onClick={onFieldRemoveClick}
 								>
 									<Button.Content hidden>
 										Remove
@@ -67,7 +76,15 @@ const FieldCard = props => {
 				</Grid>
 			</Segment>
 			<Segment>
-				<FieldContent {...props} />
+				<FieldContent
+					id={id}
+					type={type}
+					options={options}
+					onOptionAdd={onOptionAdd}
+					onOptionRemove={onOptionRemove}
+					setOptionName={setOptionName}
+					label={label}
+				/>
 			</Segment>
 		</Segment.Group>
 	);

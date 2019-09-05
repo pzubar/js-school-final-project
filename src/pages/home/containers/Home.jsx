@@ -24,8 +24,8 @@ import { requestDeleteForm } from '../../../actions/thunks';
 
 const HomePage = memo(props => {
 	const {
-		setLoadedData,
-		addForm,
+		setLoadedDataConnect,
+		addFormConnect,
 		areFormsLoaded,
 		formsList,
 		deleteForm,
@@ -34,10 +34,10 @@ const HomePage = memo(props => {
 	useEffect(() => {
 		if (!areFormsLoaded)
 			loadFormsList()
-				.then(forms => forms.forEach(addForm))
-				.finally(() => setLoadedData(FORMS));
+				.then(forms => forms.forEach(addFormConnect))
+				.finally(() => setLoadedDataConnect(FORMS));
 		window.document.title = 'Home';
-	}, []);
+	}, [addFormConnect, areFormsLoaded, setLoadedDataConnect]);
 
 	return (
 		<Segment placeholder style={{ height: '100vh' }}>
@@ -132,8 +132,8 @@ export default connect(
 		areFillsLoaded: getAreFillsLoaded(state),
 	}),
 	{
-		setLoadedData,
-		addForm,
+		setLoadedDataConnect: setLoadedData,
+		addFormConnect: addForm,
 		deleteForm: requestDeleteForm,
 	},
 )(HomePage);

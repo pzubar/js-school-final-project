@@ -26,7 +26,7 @@ const Filler = ({ match }) => {
 
 	useEffect(() => {
 		getForm(id)(dispatch);
-	}, []);
+	}, [id]);
 
 	return (
 		<Responsive as={Segment}>

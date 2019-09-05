@@ -10,12 +10,14 @@ import {
 	Responsive,
 } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import FieldCard from '../components/FieldCard.jsx';
+import FieldCard from '../components/FieldCard';
 import {
 	addField,
 	addOption,
+	changeFieldType,
 	removeField,
 	removeOption,
+	setFieldLabel,
 	setName,
 	setOptionName,
 } from '../actions';
@@ -35,35 +37,44 @@ const FormEditor = ({ match }) => {
 	const onFormNameChange = useCallback((event, { value }) => {
 		dispatch(setName(value));
 	}, []);
-
-	const saveChangesToServer = useCallback(() => {
-		editFormById(id, name, Object.values(fields))
-			.then(showInfoMessage)
-			.catch(showErrorMessage);
-	}, [id, name, fields]);
-
 	const onOptionNameChange = useCallback(
 		data => dispatch(setOptionName(data)),
 		[],
 	);
 	const onFieldAddClick = useCallback(() => dispatch(addField()), []);
 	const onFieldRemoveClick = useCallback(
-		data => dispatch(removeField(data)),
+		fieldId => dispatch(removeField(fieldId)),
 		[],
 	);
 	const onOptionRemove = useCallback(
 		data => dispatch(removeOption(data)),
 		[],
 	);
-	const onOptionAdd = useCallback(data => dispatch(addOption(data)), []);
-	useEffect(() => {
-		setFieldsList(Object.keys(fields));
-	}, [fields]);
+	const onOptionAdd = useCallback(
+		({ target }) => dispatch(addOption(target.name)),
+		[],
+	);
+	const onFieldLabelChange = useCallback(({ target }, { value }) => {
+		const { name: fieldId } = target;
+
+		dispatch(setFieldLabel({ id: fieldId, value }));
+	}, []);
+	const onFieldTypeChange = useCallback(({ id: fieldId, value }) => {
+		dispatch(changeFieldType({ id: fieldId, value }));
+	}, []);
+	const onSaveButtonClick = useCallback(() => {
+		editFormById(id, name, Object.values(fields))
+			.then(showInfoMessage)
+			.catch(showErrorMessage);
+	}, [id, name, fields]);
+
+	useEffect(() => setFieldsList(Object.keys(fields)), [fields]);
 
 	useEffect(() => {
 		if (id) getForm(id)(dispatch);
 		else createForm(getNewFormId())(dispatch);
-	}, []);
+		window.document.title = 'Form Editor';
+	}, [id]);
 
 	return (
 		<Responsive as={Segment}>
@@ -89,12 +100,13 @@ const FormEditor = ({ match }) => {
 								<FieldCard
 									key={key}
 									id={key}
+									onLabelChange={onFieldLabelChange}
 									setOptionName={onOptionNameChange}
 									removeField={onFieldRemoveClick}
-									removeOption={onOptionRemove}
-									addOption={onOptionAdd}
-									dispatch={dispatch}
-									{...fields[key]}
+									onOptionRemove={onOptionRemove}
+									onOptionAdd={onOptionAdd}
+									onTypeChange={onFieldTypeChange}
+									fieldData={fields[key]}
 								/>
 							))}
 						</Form>
@@ -112,7 +124,7 @@ const FormEditor = ({ match }) => {
 			</Card>
 			<Button
 				disabled={!isLoaded}
-				onClick={saveChangesToServer}
+				onClick={onSaveButtonClick}
 				fluid
 				positive
 			>

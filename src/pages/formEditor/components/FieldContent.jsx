@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { Button, Form, Input, List, Icon } from 'semantic-ui-react';
 import FieldOption from './FieldOption';
 
@@ -7,12 +7,12 @@ const FieldContent = props => {
 		id,
 		type,
 		options = [],
-		addOption,
-		removeOption,
+		onOptionAdd,
+		onOptionRemove,
 		setOptionName,
 		label,
 	} = props;
-	const onOptionAddClick = useCallback(() => addOption(id), [id]);
+
 	switch (type) {
 		case 'input':
 		case 'number':
@@ -38,7 +38,7 @@ const FieldContent = props => {
 							fieldId={id}
 							name={name}
 							value={value}
-							onRemove={removeOption}
+							onRemove={onOptionRemove}
 							length={options.length}
 							onNameChange={setOptionName}
 						/>
@@ -49,7 +49,8 @@ const FieldContent = props => {
 						color="teal"
 						fluid
 						icon
-						onClick={onOptionAddClick}
+						name={id}
+						onClick={onOptionAdd}
 					>
 						<Icon name="plus square" />
 						Add Option
