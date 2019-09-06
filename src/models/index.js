@@ -13,7 +13,7 @@ export const loadFormsList = () => {
 						const id = childSnapshot.key;
 						const { name, fields } = childSnapshot.val();
 
-						result.push({ id, name, fields: fields.length });
+						result.push({ id, name, fields });
 					});
 					resolve(result);
 				} catch (e) {
@@ -58,7 +58,7 @@ export const removeFormById = id => {
 	});
 };
 
-export const getFormById = id => {
+export const fetchFormById = id => {
 	return new Promise((resolve, reject) => {
 		database
 			.ref(`/forms/${id}`)

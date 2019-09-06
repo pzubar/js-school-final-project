@@ -8,9 +8,9 @@ import {
 	Responsive,
 	Segment,
 } from 'semantic-ui-react';
-import reducer from '../reducer';
-import { initialState } from '../../formEditor/reducer';
-import { getForm } from '../../formEditor/thunks';
+import reducer from '../fillerReducer';
+import { initialState } from '../../formEditor/editorReducer';
+import { getFormById } from '../../formEditor/helpers';
 import FillCard from '../components/FillCard';
 
 const Filler = ({ match }) => {
@@ -25,7 +25,7 @@ const Filler = ({ match }) => {
 	}, [fields]);
 
 	useEffect(() => {
-		getForm(id)(dispatch);
+		getFormById(id)(dispatch);
 	}, [id]);
 
 	return (

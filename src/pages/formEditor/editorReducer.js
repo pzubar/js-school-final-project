@@ -1,21 +1,19 @@
-import { handleActions } from 'redux-actions';
+import { handleActions, createAction } from 'redux-actions';
 import uid from 'uniqid';
-import {
-	addField,
-	removeField,
-	setName,
-	addOption,
-	removeOption,
-	changeFieldType,
-	setOptionName,
-	setFieldLabel,
-	setIsLoaded,
-} from './actions';
-import { INITIAL_FIELD_DATA } from './constants';
+import { INITIAL_FIELD_DATA } from '../../constants';
+
+export const addField = createAction('FORM_EDITOR::ADD_FIELD');
+export const removeField = createAction('FORM_EDITOR::REMOVE_FIELD');
+export const setName = createAction('FORM_EDITOR::SET_FORM_NAME');
+export const setOptionName = createAction('FORM_EDITOR::SET_OPTION_NAME');
+export const addOption = createAction('FORM_EDITOR::ADD_OPTION');
+export const removeOption = createAction('FORM_EDITOR::REMOVE_OPTION');
+export const changeFieldType = createAction('FORM_EDITOR::CHANGE_FIELD_TYPE');
+export const setFieldLabel = createAction('FORM_EDITOR::SET_FIELD_LABEL');
+export const setIsLoaded = createAction('FORM_EDITOR::SET_IS_LOADED');
 
 export const initialState = {
 	name: 'Unnamed Form',
-	isLoaded: false,
 	fields: {},
 };
 

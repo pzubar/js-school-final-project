@@ -4,14 +4,14 @@ import {
 	addForm,
 	addFill,
 	deleteForm,
-	setIsRedirectNeeded,
+	setRedirectUrl,
 } from '../actions';
 
 export const initialState = {
 	loadedData: [],
 	formsList: [],
 	fillsList: [],
-	isRedirectNeeded: false,
+	redirectUrl: '',
 };
 
 export default handleActions(
@@ -32,9 +32,9 @@ export default handleActions(
 			...state,
 			formsList: state.formsList.filter(({ id }) => id !== payload),
 		}),
-		[setIsRedirectNeeded]: (state, { payload }) => ({
+		[setRedirectUrl]: (state, { payload }) => ({
 			...state,
-			isRedirectNeeded: payload,
+			redirectUrl: payload,
 		}),
 	},
 	initialState,

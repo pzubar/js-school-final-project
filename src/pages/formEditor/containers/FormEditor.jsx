@@ -11,9 +11,13 @@ import {
 	Menu,
 } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import FieldCard from '../components/FieldCard';
-import {
+import { getFormById, createForm } from '../helpers';
+import { editFormById, getNewFormId } from '../../../models';
+import { showErrorMessage, showInfoMessage } from '../../../helpers/messages';
+import reducer, {
+	initialState,
 	addField,
 	addOption,
 	changeFieldType,
@@ -22,47 +26,55 @@ import {
 	setFieldLabel,
 	setName,
 	setOptionName,
-} from '../actions';
-import { getForm, createForm } from '../thunks';
-import { MAX_FIELDS } from '../constants';
-import { editFormById, getNewFormId } from '../../../models';
-import { showErrorMessage, showInfoMessage } from '../../../helpers/messages';
-import reducer, { initialState } from '../reducer';
+} from '../editorReducer';
+import { EDIT_FORM, HOME, MAX_FIELDS_IN_FORM } from '../../../constants';
+import {
+	getFormData,
+	getIdFromMatch,
+	getIsFormLoaded,
+} from '../../../selectors';
+import { addForm, setRedirectUrl } from '../../../actions';
 
-const FormEditor = ({ match }) => {
-	const [state, dispatch] = useReducer(reducer, initialState);
+const FormEditor = props => {
+	const {
+		id,
+		isLoaded,
+		formData,
+		redirectUrl,
+		addFormConnect,
+		setRedirectConnect,
+	} = props;
+	const [state, localDispatch] = useReducer(reducer, initialState);
 	const [fieldsList, setFieldsList] = useState([]);
-	const { params } = match;
-	const { id } = params;
-	const { isLoaded, name, fields } = state;
+	const { name, fields } = state;
 
 	const onFormNameChange = useCallback((event, { value }) => {
-		dispatch(setName(value));
+		localDispatch(setName(value));
 	}, []);
 	const onOptionNameChange = useCallback(
-		data => dispatch(setOptionName(data)),
+		data => localDispatch(setOptionName(data)),
 		[],
 	);
-	const onFieldAddClick = useCallback(() => dispatch(addField()), []);
+	const onFieldAddClick = useCallback(() => localDispatch(addField()), []);
 	const onFieldRemoveClick = useCallback(
-		fieldId => dispatch(removeField(fieldId)),
+		fieldId => localDispatch(removeField(fieldId)),
 		[],
 	);
 	const onOptionRemove = useCallback(
-		data => dispatch(removeOption(data)),
+		data => localDispatch(removeOption(data)),
 		[],
 	);
 	const onOptionAdd = useCallback(
-		({ target }) => dispatch(addOption(target.name)),
+		({ target }) => localDispatch(addOption(target.name)),
 		[],
 	);
 	const onFieldLabelChange = useCallback(({ target }, { value }) => {
 		const { name: fieldId } = target;
 
-		dispatch(setFieldLabel({ id: fieldId, value }));
+		localDispatch(setFieldLabel({ id: fieldId, value }));
 	}, []);
 	const onFieldTypeChange = useCallback(({ id: fieldId, value }) => {
-		dispatch(changeFieldType({ id: fieldId, value }));
+		localDispatch(changeFieldType({ id: fieldId, value }));
 	}, []);
 	const onSaveButtonClick = useCallback(() => {
 		editFormById(id, name, Object.values(fields))
@@ -73,17 +85,43 @@ const FormEditor = ({ match }) => {
 	useEffect(() => setFieldsList(Object.keys(fields)), [fields]);
 
 	useEffect(() => {
-		if (id) getForm(id)(dispatch);
-		else createForm(getNewFormId())(dispatch);
-		window.document.title = 'Form Editor';
-	}, [id]);
+		if (formData) {
+			localDispatch(setName(formData.name));
+			formData.fields.forEach(field => localDispatch(addField(field)));
+		}
+	}, [formData]);
+	useEffect(() => {
+		if (!id) {
+			createForm(getNewFormId(), newFormData => {
+				addFormConnect(newFormData);
+				setRedirectConnect(`${EDIT_FORM}/${newFormData.id}`);
+			});
+		} else if (isLoaded === false) {
+			getFormById(id)
+				.then(newFormData => addFormConnect(newFormData))
+				.catch(error => {
+					showErrorMessage(error);
+					setRedirectConnect(HOME);
+				});
+		}
+	}, [isLoaded, id, setRedirectConnect, addFormConnect]);
 
-	return (
+	useEffect(() => {
+		window.document.title = 'Form Editor';
+	}, []);
+
+	useEffect(() => {
+		if (redirectUrl) setRedirectConnect('');
+	}, [redirectUrl, setRedirectConnect]);
+
+	return redirectUrl ? (
+		<Redirect to={redirectUrl} />
+	) : (
 		<Container>
 			<Menu inverted>
 				<Container>
 					<Menu.Item as="a" header>
-						<Link to="/">Home</Link>
+						<Link to={HOME}>Home</Link>
 					</Menu.Item>
 				</Container>
 			</Menu>
@@ -124,7 +162,7 @@ const FormEditor = ({ match }) => {
 						attached="bottom"
 						onClick={onFieldAddClick}
 						primary
-						disabled={fieldsList.length === MAX_FIELDS}
+						disabled={fieldsList.length === MAX_FIELDS_IN_FORM}
 						fluid
 					>
 						Add new field
@@ -144,6 +182,14 @@ const FormEditor = ({ match }) => {
 };
 
 export default connect(
-	state => state,
-	{},
+	(state, props) => ({
+		id: getIdFromMatch(state, props),
+		isLoaded: getIsFormLoaded(state, props),
+		redirectUrl: state.global.redirectUrl,
+		formData: getFormData(state, props),
+	}),
+	{
+		addFormConnect: addForm,
+		setRedirectConnect: setRedirectUrl,
+	},
 )(FormEditor);

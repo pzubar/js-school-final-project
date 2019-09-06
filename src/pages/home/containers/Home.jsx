@@ -20,7 +20,8 @@ import {
 	getFillsList,
 } from '../../../selectors';
 import { loadFormsList } from '../../../models';
-import { requestDeleteForm } from '../../../actions/thunks';
+import requestDeleteForm from '../../../actions/thunks';
+import { showErrorMessage } from '../../../helpers/messages';
 
 const HomePage = memo(props => {
 	const {
@@ -35,6 +36,7 @@ const HomePage = memo(props => {
 		if (!areFormsLoaded)
 			loadFormsList()
 				.then(forms => forms.forEach(addFormConnect))
+				.catch(showErrorMessage)
 				.finally(() => setLoadedDataConnect(FORMS));
 		window.document.title = 'Home';
 	}, [addFormConnect, areFormsLoaded, setLoadedDataConnect]);
@@ -60,7 +62,7 @@ const HomePage = memo(props => {
 										key={id}
 									>
 										<Feed.Content
-											date={`Fields: ${fields}`}
+											date={`Fields: ${fields.length}`}
 											summary={name}
 										/>
 										<Button.Group size="tiny">
@@ -76,7 +78,7 @@ const HomePage = memo(props => {
 											</Link>
 											<Button.Or />
 											<Link to={`/form/f/${id}`}>
-												<Button animated="vertical">
+												<Button animated="vertical" disabled>
 													<Button.Content hidden>
 														Share
 													</Button.Content>

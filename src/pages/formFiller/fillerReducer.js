@@ -1,7 +1,11 @@
 import { handleActions } from 'redux-actions';
 import uid from 'uniqid';
-import { initialState } from '../formEditor/reducer';
-import { addField, setIsLoaded, setName } from '../formEditor/actions';
+import {
+	initialState,
+	addField,
+	setIsLoaded,
+	setName,
+} from '../formEditor/editorReducer';
 
 export default handleActions(
 	{
