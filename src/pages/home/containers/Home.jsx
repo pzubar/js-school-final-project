@@ -78,7 +78,7 @@ const HomePage = memo(props => {
 											</Link>
 											<Button.Or />
 											<Link to={`/form/f/${id}`}>
-												<Button animated="vertical" disabled>
+												<Button animated="vertical">
 													<Button.Content hidden>
 														Share
 													</Button.Content>

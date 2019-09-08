@@ -74,7 +74,7 @@ export default handleActions(
 					...state.fields[payload.id],
 					options: state.fields[payload.id].options.map(option =>
 						option.value === payload.value
-							? { ...option, name: payload.name }
+							? { ...option, text: payload.name }
 							: option,
 					),
 				},
@@ -92,7 +92,7 @@ export default handleActions(
 					)
 						? state.fields[payload.id].options || [
 								{
-									name: 'Option 1',
+									text: 'Option 1',
 									value: uid(),
 								},
 						  ]

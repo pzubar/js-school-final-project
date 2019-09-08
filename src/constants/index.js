@@ -6,3 +6,5 @@ export const EDIT_FORM = '/form/e';
 export const FILL_FORM = '/form/f';
 export const MAX_FIELDS_IN_FORM = 15;
 export const INITIAL_FIELD_DATA = { type: 'input', label: 'Unnamed question' };
+export const CHECK = 'check';
+export const RADIO = 'radio';

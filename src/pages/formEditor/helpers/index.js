@@ -1,18 +1,9 @@
 import { showErrorMessage, showInfoMessage } from '../../../helpers/messages';
-import { fetchFormById, editFormById } from '../../../models';
+import { editFormById } from '../../../models';
 import { initialState } from '../editorReducer';
 import { INITIAL_FIELD_DATA } from '../../../constants';
 
-export const getFormById = id =>
-	new Promise((resolve, reject) => {
-		fetchFormById(id)
-			.then(form => {
-				resolve({ ...form, id });
-			})
-			.catch(reject);
-	});
-
-export const createForm = (createId, callback) => {
+const createForm = (createId, callback) => {
 	const { name } = initialState;
 	const fields = [INITIAL_FIELD_DATA];
 
@@ -25,3 +16,5 @@ export const createForm = (createId, callback) => {
 			showErrorMessage(error);
 		});
 };
+
+export default createForm;

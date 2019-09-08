@@ -13,8 +13,8 @@ import {
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import FieldCard from '../components/FieldCard';
-import { getFormById, createForm } from '../helpers';
-import { editFormById, getNewFormId } from '../../../models';
+import createForm from '../helpers';
+import { editFormById, getNewFormId, fetchFormById } from '../../../models';
 import { showErrorMessage, showInfoMessage } from '../../../helpers/messages';
 import reducer, {
 	initialState,
@@ -97,8 +97,8 @@ const FormEditor = props => {
 				setRedirectConnect(`${EDIT_FORM}/${newFormData.id}`);
 			});
 		} else if (isLoaded === false) {
-			getFormById(id)
-				.then(newFormData => addFormConnect(newFormData))
+			fetchFormById(id)
+				.then(newFormData => addFormConnect({ ...newFormData, id }))
 				.catch(error => {
 					showErrorMessage(error);
 					setRedirectConnect(HOME);
@@ -120,7 +120,7 @@ const FormEditor = props => {
 		<Container>
 			<Menu inverted>
 				<Container>
-					<Menu.Item as="a" header>
+					<Menu.Item header>
 						<Link to={HOME}>Home</Link>
 					</Menu.Item>
 				</Container>

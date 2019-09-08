@@ -1,35 +1,78 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useEffect, useReducer, useState, useCallback } from 'react';
 import {
 	Card,
 	Dimmer,
 	Form,
 	Header,
 	Loader,
-	Responsive,
+	Container,
 	Segment,
 } from 'semantic-ui-react';
-import reducer from '../fillerReducer';
-import { initialState } from '../../formEditor/editorReducer';
-import { getFormById } from '../../formEditor/helpers';
-import FillCard from '../components/FillCard';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import reducer, { setFieldValue } from '../fillerReducer';
+import {
+	addField,
+	initialState,
+	setName,
+} from '../../formEditor/editorReducer';
+import FillCardContent from '../components/FillCardСontent';
+import {
+	getFormData,
+	getIdFromMatch,
+	getIsFormLoaded,
+} from '../../../selectors';
+import { addForm, setRedirectUrl } from '../../../actions';
+import { fetchFormById } from '../../../models';
+import { HOME } from '../../../constants';
+import { showErrorMessage } from '../../../helpers/messages';
 
-const Filler = ({ match }) => {
-	const [state, dispatch] = useReducer(reducer, initialState);
-	const { name, isLoaded, fields } = state;
+const Filler = props => {
+	const {
+		id,
+		isLoaded,
+		formData,
+		redirectUrl,
+		addFormConnect,
+		setRedirectConnect,
+	} = props;
+	const [state, localDispatch] = useReducer(reducer, initialState);
+	const { name, fields } = state;
 	const [fieldsList, setFieldsList] = useState([]);
-	const { params } = match;
-	const { id } = params;
+
+	const onChange = useCallback(({ target }, { value }) => {
+		localDispatch(setFieldValue({ id: target.id, value }));
+	}, []);
+	useEffect(() => setFieldsList(Object.keys(fields)), [fields]);
 
 	useEffect(() => {
-		setFieldsList(Object.keys(fields));
-	}, [fields]);
+		if (formData) {
+			localDispatch(setName(formData.name));
+			formData.fields.forEach(field => localDispatch(addField(field)));
+		}
+	}, [formData]);
 
 	useEffect(() => {
-		getFormById(id)(dispatch);
-	}, [id]);
+		if (id && isLoaded === false) {
+			fetchFormById(id)
+				.then(newFormData => {
+					addFormConnect({ ...newFormData, id });
+				})
+				.catch(error => {
+					setRedirectConnect(HOME);
+					showErrorMessage(error);
+				});
+		}
+	}, [isLoaded, id, setRedirectConnect, addFormConnect]);
 
-	return (
-		<Responsive as={Segment}>
+	useEffect(() => {
+		window.document.title = 'Form Filler';
+	}, []);
+
+	return redirectUrl ? (
+		<Redirect to={redirectUrl} />
+	) : (
+		<Container>
 			<Dimmer active={!isLoaded} inverted>
 				<Loader inverted content="Loading" />
 			</Dimmer>
@@ -46,13 +89,29 @@ const Filler = ({ match }) => {
 				<Card.Content>
 					<Form>
 						{fieldsList.map(key => (
-							<FillCard key={key} id={key} {...fields[key]} />
+							<FillCardContent
+								key={key}
+								id={key}
+								onChange={onChange}
+								{...fields[key]}
+							/>
 						))}
 					</Form>
 				</Card.Content>
 			</Card>
-		</Responsive>
+		</Container>
 	);
 };
 
-export default Filler;
+export default connect(
+	(state, props) => ({
+		id: getIdFromMatch(state, props),
+		isLoaded: getIsFormLoaded(state, props),
+		redirectUrl: state.global.redirectUrl,
+		formData: getFormData(state, props),
+	}),
+	{
+		addFormConnect: addForm,
+		setRedirectConnect: setRedirectUrl,
+	},
+)(Filler);

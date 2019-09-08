@@ -32,11 +32,11 @@ const FieldContent = props => {
 		case 'check':
 			return (
 				<List>
-					{options.map(({ name, value }) => (
+					{options.map(({ text, value }) => (
 						<FieldOption
 							key={value}
 							fieldId={id}
-							name={name}
+							name={text}
 							value={value}
 							onRemove={onOptionRemove}
 							length={options.length}
