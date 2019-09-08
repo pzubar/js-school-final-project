@@ -40,8 +40,8 @@ const Filler = props => {
 	const { name, fields } = state;
 	const [fieldsList, setFieldsList] = useState([]);
 
-	const onChange = useCallback(({ target }, { value }) => {
-		localDispatch(setFieldValue({ id: target.id, value }));
+	const onChange = useCallback((fieldId, value) => {
+		localDispatch(setFieldValue({ id: fieldId, value }));
 	}, []);
 	useEffect(() => setFieldsList(Object.keys(fields)), [fields]);
 

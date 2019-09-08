@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Form, Input, Select } from 'semantic-ui-react';
 import { CHECK } from '../../../constants';
 
 const FillCardContent = ({ type, label, options, onChange, value, id }) => {
+	const onFieldChange = useCallback(
+		(event, { value: newValue }) => {
+			onChange(id, newValue);
+		},
+		[id, onChange],
+	);
 	switch (type) {
 		case 'input':
 		case 'number':
@@ -12,12 +18,13 @@ const FillCardContent = ({ type, label, options, onChange, value, id }) => {
 					control={Input}
 					type={type}
 					label={label}
-					id={id}
-					onChange={onChange}
+					onChange={onFieldChange}
 				/>
 			);
 		case 'text':
-			return <Form.TextArea label={label} onChange={onChange} id={id} />;
+			return (
+				<Form.TextArea label={label} onChange={onFieldChange} id={id} />
+			);
 		case 'dropdown':
 			return (
 				<Form.Field
@@ -25,9 +32,8 @@ const FillCardContent = ({ type, label, options, onChange, value, id }) => {
 					label={label}
 					options={options}
 					placeholder={label}
-					id={id}
 					value={value}
-					onChange={onChange}
+					onChange={onFieldChange}
 				/>
 			);
 		case 'radio':
@@ -36,10 +42,9 @@ const FillCardContent = ({ type, label, options, onChange, value, id }) => {
 					<label>{label}</label>
 					{options.map(({ text, value: key }) => (
 						<Form.Radio
-							onChange={onChange}
+							onChange={onFieldChange}
 							label={text}
 							key={key}
-							id={id}
 							value={key}
 							checked={key === value}
 						/>
@@ -52,14 +57,13 @@ const FillCardContent = ({ type, label, options, onChange, value, id }) => {
 					<label>{label}</label>
 					{options.map(({ text, value: key }) => (
 						<Form.Checkbox
-							onChange={onChange}
+							onChange={onFieldChange}
 							label={text}
 							key={key}
 							value={key}
 							checked={
 								Array.isArray(value) && value.includes(key)
 							}
-							id={id}
 						/>
 					))}
 				</Form.Group>
