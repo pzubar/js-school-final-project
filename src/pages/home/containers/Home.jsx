@@ -20,7 +20,7 @@ import {
 	getFillsList,
 } from '../../../selectors';
 import { loadFormsList } from '../../../models';
-import requestDeleteForm from '../../../actions/thunks';
+import { requestDeleteForm } from '../../../actions/thunks';
 import { showErrorMessage } from '../../../helpers/messages';
 
 const HomePage = memo(props => {

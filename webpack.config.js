@@ -1,4 +1,5 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
@@ -42,8 +43,13 @@ module.exports = {
 	},
 	plugins: [
 		new HtmlWebpackPlugin({
-			title: 'Development',
+			title: 'Form Factory',
 			template: 'index.html',
+			favicon: path.resolve(__dirname, './src/assets/favicon.ico'),
+		}),
+		new webpack.EnvironmentPlugin({
+			NODE_ENV: 'development',
+			DEBUG: false,
 		}),
 	],
 };

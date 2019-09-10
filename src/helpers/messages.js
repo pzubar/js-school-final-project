@@ -1,7 +1,10 @@
 import PNotify from 'pnotify/dist/es/PNotify';
+import 'pnotify/dist/es/PNotifyHistory';
 import 'pnotify/dist/es/PNotifyButtons';
 import 'pnotify/dist/PNotifyBrightTheme.css';
 
-export const showErrorMessage = message =>
-	PNotify.error(`An error occurred: ${message}`);
+PNotify.modules.History.defaults.maxInStack = 2;
+
+export const showErrorMessage = errorMessage =>
+	PNotify.error(errorMessage || `An error occurred!`);
 export const showInfoMessage = message => PNotify.info(message);

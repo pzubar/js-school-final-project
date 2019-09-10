@@ -69,3 +69,14 @@ export const fetchFormById = id => {
 			.catch(reject);
 	});
 };
+
+export const fetchCreateFill = ({ id, name, fieldsList }) => {
+	return new Promise((resolve, reject) => {
+		const newFillRef = database.ref(`/fills/${name}::${id}`).push();
+
+		newFillRef.set(fieldsList).then(error => {
+			if (error) reject(error);
+			else resolve('Success');
+		});
+	});
+};

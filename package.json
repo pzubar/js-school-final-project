@@ -8,8 +8,8 @@
   "author": "pzubar <pmzubar@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "webpack-dev-server --env.LOCAL=true",
-    "build": "webpack",
+    "start": "webpack-dev-server",
+    "build": "webpack --env.NODE_ENV=production",
     "lint": "eslint src -c .eslintrc --ext js,jsx --fix"
   },
   "dependencies": {
@@ -18,6 +18,7 @@
     "babel-loader": "^8.0.6",
     "firebase": "^6.4.0",
     "html-webpack-plugin": "^3.2.0",
+    "path": "^0.12.7",
     "pnotify": "^4.0.0",
     "postcss-loader": "^3.0.0",
     "react": "^16.8.6",

@@ -1,31 +1,43 @@
 import React, { useCallback } from 'react';
 import { Form, Input, Select } from 'semantic-ui-react';
-import { CHECK } from '../../../constants';
+import {
+	CHECK,
+	DROPDOWN,
+	INPUT,
+	NUMBER,
+	RADIO,
+	TEXT,
+} from '../../../constants';
 
-const FillCardContent = ({ type, label, options, onChange, value, id }) => {
+const FillCardContent = ({ onChange, id, fieldData }) => {
+	const { type, label, value, options } = fieldData;
 	const onFieldChange = useCallback(
-		(event, { value: newValue }) => {
-			onChange(id, newValue);
-		},
+		(event, { value: newValue }) => onChange(id, newValue),
 		[id, onChange],
 	);
+
 	switch (type) {
-		case 'input':
-		case 'number':
+		case INPUT:
+		case NUMBER:
 			return (
 				<Form.Field
 					fluid
 					control={Input}
 					type={type}
 					label={label}
+					value={value}
 					onChange={onFieldChange}
 				/>
 			);
-		case 'text':
+		case TEXT:
 			return (
-				<Form.TextArea label={label} onChange={onFieldChange} id={id} />
+				<Form.TextArea
+					value={value}
+					label={label}
+					onChange={onFieldChange}
+				/>
 			);
-		case 'dropdown':
+		case DROPDOWN:
 			return (
 				<Form.Field
 					control={Select}
@@ -36,10 +48,10 @@ const FillCardContent = ({ type, label, options, onChange, value, id }) => {
 					onChange={onFieldChange}
 				/>
 			);
-		case 'radio':
+		case RADIO:
 			return (
-				<Form.Group grouped>
-					<label>{label}</label>
+				<Form.Group grouped id={id}>
+					<label htmlFor={id}>{label}</label>
 					{options.map(({ text, value: key }) => (
 						<Form.Radio
 							onChange={onFieldChange}
@@ -53,23 +65,21 @@ const FillCardContent = ({ type, label, options, onChange, value, id }) => {
 			);
 		case CHECK:
 			return (
-				<Form.Group grouped>
-					<label>{label}</label>
+				<Form.Group grouped id={id}>
+					<label htmlFor={id}>{label}</label>
 					{options.map(({ text, value: key }) => (
 						<Form.Checkbox
 							onChange={onFieldChange}
 							label={text}
 							key={key}
 							value={key}
-							checked={
-								Array.isArray(value) && value.includes(key)
-							}
+							checked={value.includes(key)}
 						/>
 					))}
 				</Form.Group>
 			);
 		default:
-			return console.error(`Unexpected field type: ${type}`) || <div />;
+			throw Error('Unexpected field type passed');
 	}
 };
 

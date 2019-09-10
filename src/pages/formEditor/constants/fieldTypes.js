@@ -1,38 +1,47 @@
-export const FIELD_TYPES = [
+import {
+	CHECK,
+	DROPDOWN,
+	INPUT,
+	NUMBER,
+	RADIO,
+	TEXT,
+} from '../../../constants';
+
+const FIELD_TYPES = [
 	{
-		key: 'input',
+		key: INPUT,
 		text: 'Input',
-		value: 'input',
+		value: INPUT,
 		icon: 'i cursor',
 	},
 	{
-		key: 'number',
+		key: NUMBER,
 		text: 'Number',
-		value: 'number',
+		value: NUMBER,
 		icon: 'sort numeric down',
 	},
 	{
-		key: 'text',
+		key: TEXT,
 		text: 'Text',
-		value: 'text',
+		value: TEXT,
 		icon: 'align justify',
 	},
 	{
-		key: 'dropdown',
+		key: DROPDOWN,
 		text: 'Dropdown',
-		value: 'dropdown',
+		value: DROPDOWN,
 		icon: 'filter',
 	},
 	{
-		key: 'check',
-		text: 'Chekmark',
-		value: 'check',
+		key: CHECK,
+		text: 'Checkbox',
+		value: CHECK,
 		icon: 'checkmark box',
 	},
 	{
-		key: 'radio',
+		key: RADIO,
 		text: 'Radio',
-		value: 'radio',
+		value: RADIO,
 		icon: 'list',
 	},
 ];

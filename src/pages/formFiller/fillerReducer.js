@@ -1,24 +1,32 @@
 import { handleActions, createAction } from 'redux-actions';
 import uid from 'uniqid';
-import { initialState, addField, setName } from '../formEditor/editorReducer';
+import { setName } from '../formEditor/editorReducer';
 import { CHECK } from '../../constants';
+import {
+	handleMultipleValueChange,
+	getDefaultValue,
+	checkSomeEmptyValue,
+} from '../../helpers';
 
 export const setFieldValue = createAction('FILLER::SET_FIELD');
+export const addField = createAction('FILLER::ADD_FIELD');
 
 export default handleActions(
 	{
 		[addField]: (state, { payload }) => {
 			const { type } = payload;
+			const id = uid();
 
 			return {
 				...state,
 				fields: {
 					...state.fields,
-					[uid()]: {
+					[id]: {
 						...payload,
-						value: type === CHECK ? [] : undefined,
+						value: getDefaultValue(type),
 					},
 				},
+				fieldsIdsList: [...state.fieldsIdsList, id],
 			};
 		},
 		[setName]: (state, { payload }) => ({
@@ -28,23 +36,23 @@ export default handleActions(
 		[setFieldValue]: (state, { payload }) => {
 			const { id, value } = payload;
 			const { type, value: prevValue } = state.fields[id];
-			debugger;
+			const newFields = {
+				...state.fields,
+				[id]: {
+					...state.fields[id],
+					value:
+						type === CHECK
+							? handleMultipleValueChange(prevValue, value)
+							: value,
+				},
+			};
+
 			return {
 				...state,
-				fields: {
-					...state.fields,
-					[id]: {
-						...state.fields[id],
-						value:
-							type === CHECK
-								? prevValue.includes(value)
-									? prevValue.filter(item => item !== value)
-									: [...prevValue, value]
-								: value,
-					},
-				},
+				fields: newFields,
+				isSubmitDisabled: checkSomeEmptyValue(Object.values(newFields)),
 			};
 		},
 	},
-	initialState,
+	{},
 );

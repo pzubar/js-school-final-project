@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState, useCallback } from 'react';
+import React, { useEffect, useReducer, useCallback } from 'react';
 import {
 	Card,
 	Dimmer,
@@ -6,16 +6,13 @@ import {
 	Header,
 	Loader,
 	Container,
+	Button,
 	Segment,
 } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import reducer, { setFieldValue } from '../fillerReducer';
-import {
-	addField,
-	initialState,
-	setName,
-} from '../../formEditor/editorReducer';
+import reducer, { setFieldValue, addField } from '../fillerReducer';
+import { initialState, setName } from '../../formEditor/editorReducer';
 import FillCardContent from '../components/FillCardСontent';
 import {
 	getFormData,
@@ -24,8 +21,9 @@ import {
 } from '../../../selectors';
 import { addForm, setRedirectUrl } from '../../../actions';
 import { fetchFormById } from '../../../models';
-import { HOME } from '../../../constants';
+import { FILL_ALL_FIELDS, HOME } from '../../../constants';
 import { showErrorMessage } from '../../../helpers/messages';
+import { createFill } from '../../../actions/thunks';
 
 const Filler = props => {
 	const {
@@ -35,15 +33,18 @@ const Filler = props => {
 		redirectUrl,
 		addFormConnect,
 		setRedirectConnect,
+		createFillConnect,
 	} = props;
 	const [state, localDispatch] = useReducer(reducer, initialState);
-	const { name, fields } = state;
-	const [fieldsList, setFieldsList] = useState([]);
+	const { name, fields, fieldsIdsList, isSubmitDisabled } = state;
 
-	const onChange = useCallback((fieldId, value) => {
+	const onFieldValueChange = useCallback((fieldId, value) => {
 		localDispatch(setFieldValue({ id: fieldId, value }));
 	}, []);
-	useEffect(() => setFieldsList(Object.keys(fields)), [fields]);
+	const onSaveChanges = useCallback(() => {
+		if (!isSubmitDisabled) createFillConnect({ id, name, fields });
+		else (showErrorMessage(FILL_ALL_FIELDS))
+	}, [createFillConnect, fields, id, isSubmitDisabled, name]);
 
 	useEffect(() => {
 		if (formData) {
@@ -87,17 +88,24 @@ const Filler = props => {
 					</Segment>
 				</Card.Content>
 				<Card.Content>
-					<Form>
-						{fieldsList.map(key => (
+					<Form onSubmit={onSaveChanges}>
+						{fieldsIdsList.map(key => (
 							<FillCardContent
 								key={key}
 								id={key}
-								onChange={onChange}
-								{...fields[key]}
+								onChange={onFieldValueChange}
+								fieldData={fields[key]}
 							/>
 						))}
 					</Form>
 				</Card.Content>
+				<Button
+					positive
+					onClick={onSaveChanges}
+					disabled={isSubmitDisabled}
+				>
+					Save changes
+				</Button>
 			</Card>
 		</Container>
 	);
@@ -113,5 +121,6 @@ export default connect(
 	{
 		addFormConnect: addForm,
 		setRedirectConnect: setRedirectUrl,
+		createFillConnect: createFill,
 	},
 )(Filler);

@@ -1,6 +1,6 @@
 import { handleActions, createAction } from 'redux-actions';
 import uid from 'uniqid';
-import { INITIAL_FIELD_DATA } from '../../constants';
+import { CHECK, DROPDOWN, INITIAL_FIELD_DATA, RADIO } from '../../constants';
 
 export const addField = createAction('FORM_EDITOR::ADD_FIELD');
 export const removeField = createAction('FORM_EDITOR::REMOVE_FIELD');
@@ -15,6 +15,8 @@ export const setIsLoaded = createAction('FORM_EDITOR::SET_IS_LOADED');
 export const initialState = {
 	name: 'Unnamed Form',
 	fields: {},
+	fieldsIdsList: [],
+	isSubmitDisabled: true,
 };
 
 export default handleActions(
@@ -87,9 +89,7 @@ export default handleActions(
 				[payload.id]: {
 					...state.fields[payload.id],
 					type: payload.value,
-					options: ['dropdown', 'check', 'radio'].includes(
-						payload.value,
-					)
+					options: [DROPDOWN, CHECK, RADIO].includes(payload.value)
 						? state.fields[payload.id].options || [
 								{
 									text: 'Option 1',

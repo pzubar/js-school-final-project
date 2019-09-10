@@ -8,7 +8,7 @@ import {
 	Icon,
 } from 'semantic-ui-react';
 import FieldContent from './FieldContent';
-import { FIELD_TYPES } from '../constants/fieldTypes';
+import FIELD_TYPES from '../constants/fieldTypes';
 
 const FieldCard = props => {
 	const {

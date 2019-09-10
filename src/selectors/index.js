@@ -20,6 +20,7 @@ export const getIsFormLoaded = createSelector(
 	[getFormsList, getIdFromMatch],
 	(formsList, id) => Boolean(id) && formsList.some(form => form.id === id),
 );
+
 export const getFormData = createSelector(
 	[getFormsList, getIdFromMatch],
 	(formsList, id) => formsList.find(form => form.id === id),
