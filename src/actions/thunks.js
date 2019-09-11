@@ -1,4 +1,11 @@
-import { addFillId, deleteForm, setLoadedData, addForm, addFill } from '.';
+import {
+	addFillId,
+	deleteForm,
+	setLoadedData,
+	addForm,
+	addFill,
+	setRedirectUrl,
+} from '.';
 import {
 	fetchRemoveForm,
 	fetchCreateFill,
@@ -10,7 +17,7 @@ import {
 	showErrorMessage,
 	showPrompt,
 } from '../helpers/messages';
-import { DELIMITER, FILLS_IDS, FORMS } from '../constants';
+import { DELIMITER, FILLED, FILLS_IDS, FORMS } from '../constants';
 import { getAreFillsLoaded } from '../selectors';
 import { getFillId } from '../helpers';
 
@@ -38,6 +45,7 @@ export const createFill = ({ id, name, fields }) => {
 			.then(() => {
 				if (areFillsLoaded) addFill({ fillId, fieldsList });
 				showInfoMessage('Thank you for filling the form!');
+				dispatch(setRedirectUrl(`${FILLED}/${id}/${name}`));
 			})
 			.catch(showErrorMessage);
 	};

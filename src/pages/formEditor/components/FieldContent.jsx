@@ -58,7 +58,7 @@ const FieldContent = props => {
 				</List>
 			);
 		default:
-			throw new Error(`Unexpected field type: ${type}`) || <div />;
+			throw new Error(`Unexpected field type: ${type}`);
 	}
 };
 

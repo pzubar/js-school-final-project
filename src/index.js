@@ -15,21 +15,22 @@ const rootElement = document.getElementById('root');
 
 const AppRouter = () => {
 	return (
-		<Provider store={store}>
-			<Router>
-				<Switch>
-					<Route exact path={HOME} component={HomePage} />
-					<Route path={NEW_FORM} component={Editor} />
-					<Route exact path={`${EDIT_FORM}/:id`} component={Editor} />
-					<Route exact path={`${FILL_FORM}/:id`} component={Filler} />
-					<Route exact path={`${FILLED}/:id`} conponent={Filled} />
-					<Route
-						render={() => <h1>404 Page will be right here</h1>}
-					/>
-				</Switch>
-			</Router>
-		</Provider>
+		<Router>
+			<Switch>
+				<Route exact path={HOME} component={HomePage} />
+				<Route path={NEW_FORM} component={Editor} />
+				<Route exact path={`${EDIT_FORM}/:id`} component={Editor} />
+				<Route exact path={`${FILL_FORM}/:id`} component={Filler} />
+				<Route exact path={`${FILLED}/:id/:name`} component={Filled} />
+				<Route render={() => <h1>404 Page will be right here</h1>} />
+			</Switch>
+		</Router>
 	);
 };
 
-ReactDOM.render(<AppRouter />, rootElement);
+ReactDOM.render(
+	<Provider store={store}>
+		<AppRouter />
+	</Provider>,
+	rootElement,
+);

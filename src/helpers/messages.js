@@ -7,7 +7,7 @@ import 'pnotify/dist/PNotifyBrightTheme.css';
 PNotify.modules.History.defaults.maxInStack = 2;
 
 export const showErrorMessage = errorMessage =>
-	PNotify.error(errorMessage || `An error occurred!`);
+	PNotify.error(errorMessage.toString() || `An error occurred!`);
 export const showInfoMessage = message => PNotify.info(message);
 
 export const showPrompt = title =>

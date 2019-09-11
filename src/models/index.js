@@ -76,7 +76,10 @@ export const fetchFormById = id => {
 			.ref(`/forms/${id}`)
 			.once('value')
 			.then(snapshot => {
-				resolve(snapshot.val());
+				const value = snapshot.val();
+
+				if (!value) throw Error('Form was not found');
+				resolve(value);
 			})
 			.catch(reject);
 	});
