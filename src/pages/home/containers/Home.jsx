@@ -11,35 +11,39 @@ import {
 } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { addForm, setLoadedData } from '../../../actions';
+import { addForm, setLoadedData, setRedirectUrl } from '../../../actions';
 import { FORMS } from '../../../constants';
 import {
 	getAreFormsLoaded,
-	getAreFillsLoaded,
+	getAreFillsIdsLoaded,
 	getFormsList,
-	getFillsList,
 } from '../../../selectors';
-import { loadFormsList } from '../../../models';
-import { requestDeleteForm } from '../../../actions/thunks';
-import { showErrorMessage } from '../../../helpers/messages';
+import { getFillsIds, loadData } from '../../../actions/thunks';
+import FormPreview from './FormPreview';
 
 const HomePage = memo(props => {
 	const {
-		setLoadedDataConnect,
-		addFormConnect,
 		areFormsLoaded,
+		areFillsIdsLoaded,
 		formsList,
-		deleteForm,
+		getFillsIdsConnect,
+		loadDataConnect,
+		redirectUrl,
+		setRedirectConnect
 	} = props;
 
 	useEffect(() => {
-		if (!areFormsLoaded)
-			loadFormsList()
-				.then(forms => forms.forEach(addFormConnect))
-				.catch(showErrorMessage)
-				.finally(() => setLoadedDataConnect(FORMS));
+		if (redirectUrl) setRedirectConnect('');
+	}, [redirectUrl, setRedirectConnect]);
+	useEffect(() => {
+		if (!areFormsLoaded) loadDataConnect(FORMS);
+	}, [areFormsLoaded, loadDataConnect]);
+	useEffect(() => {
+		if (!areFillsIdsLoaded) getFillsIdsConnect();
+	}, [areFillsIdsLoaded, getFillsIdsConnect]);
+	useEffect(() => {
 		window.document.title = 'Home';
-	}, [addFormConnect, areFormsLoaded, setLoadedDataConnect]);
+	}, []);
 
 	return (
 		<Segment placeholder style={{ height: '100vh' }}>
@@ -56,52 +60,8 @@ const HomePage = memo(props => {
 							</Dimmer>
 							<Feed>
 								{!formsList.length && 'You have no forms yet'}
-								{formsList.map(({ id, name, fields }) => (
-									<Feed.Event
-										style={{ paddingBottom: 10 }}
-										key={id}
-									>
-										<Feed.Content
-											date={`Fields: ${fields.length}`}
-											summary={name}
-										/>
-										<Button.Group size="tiny">
-											<Link to={`/form/e/${id}`}>
-												<Button animated="vertical">
-													<Button.Content hidden>
-														Edit
-													</Button.Content>
-													<Button.Content visible>
-														<Icon name="edit" />
-													</Button.Content>
-												</Button>
-											</Link>
-											<Button.Or />
-											<Link to={`/form/f/${id}`}>
-												<Button animated="vertical">
-													<Button.Content hidden>
-														Share
-													</Button.Content>
-													<Button.Content visible>
-														<Icon name="share" />
-													</Button.Content>
-												</Button>
-											</Link>
-											<Button.Or />
-											<Button
-												negative
-												animated="vertical"
-												onClick={() => deleteForm(id)}
-											>
-												<Button.Content hidden>
-													Delete
-												</Button.Content>
-												<Button.Content visible>
-													<Icon name="trash" />
-												</Button.Content>
-											</Button>
-										</Button.Group>
-									</Feed.Event>
+								{formsList.map(data => (
+									<FormPreview key={data.id} data={data} />
 								))}
 								<Link to="/form/new">
 									<Button fluid primary>
@@ -129,13 +89,15 @@ const HomePage = memo(props => {
 export default connect(
 	state => ({
 		formsList: getFormsList(state),
-		fillsList: getFillsList(state),
 		areFormsLoaded: getAreFormsLoaded(state),
-		areFillsLoaded: getAreFillsLoaded(state),
+		areFillsIdsLoaded: getAreFillsIdsLoaded(state),
+		redirectUrl: state.global.redirectUrl,
 	}),
 	{
 		setLoadedDataConnect: setLoadedData,
 		addFormConnect: addForm,
-		deleteForm: requestDeleteForm,
+		getFillsIdsConnect: getFillsIds,
+		loadDataConnect: loadData,
+		setRedirectConnect: setRedirectUrl,
 	},
 )(HomePage);

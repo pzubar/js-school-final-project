@@ -1,14 +1,5 @@
 import React, { useEffect, useReducer, useCallback } from 'react';
-import {
-	Card,
-	Dimmer,
-	Form,
-	Header,
-	Loader,
-	Container,
-	Button,
-	Segment,
-} from 'semantic-ui-react';
+import { Form, Button, Card } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import reducer, { setFieldValue, addField } from '../fillerReducer';
@@ -24,6 +15,7 @@ import { fetchFormById } from '../../../models';
 import { FILL_ALL_FIELDS, HOME } from '../../../constants';
 import { showErrorMessage } from '../../../helpers/messages';
 import { createFill } from '../../../actions/thunks';
+import FormCard from '../components/FormCard';
 
 const Filler = props => {
 	const {
@@ -43,7 +35,7 @@ const Filler = props => {
 	}, []);
 	const onSaveChanges = useCallback(() => {
 		if (!isSubmitDisabled) createFillConnect({ id, name, fields });
-		else (showErrorMessage(FILL_ALL_FIELDS))
+		else showErrorMessage(FILL_ALL_FIELDS);
 	}, [createFillConnect, fields, id, isSubmitDisabled, name]);
 
 	useEffect(() => {
@@ -67,47 +59,34 @@ const Filler = props => {
 	}, [isLoaded, id, setRedirectConnect, addFormConnect]);
 
 	useEffect(() => {
-		window.document.title = 'Form Filler';
-	}, []);
+		if (name) window.document.title = name;
+		else window.document.title = 'Form Filler';
+	}, [name]);
 
 	return redirectUrl ? (
 		<Redirect to={redirectUrl} />
 	) : (
-		<Container>
-			<Dimmer active={!isLoaded} inverted>
-				<Loader inverted content="Loading" />
-			</Dimmer>
-			<Card fluid>
-				<Card.Content>
-					<Segment>
-						<Card.Header>
-							<Header as="h1" label="Form Name" size="large">
-								{name}
-							</Header>
-						</Card.Header>
-					</Segment>
-				</Card.Content>
-				<Card.Content>
-					<Form onSubmit={onSaveChanges}>
-						{fieldsIdsList.map(key => (
-							<FillCardContent
-								key={key}
-								id={key}
-								onChange={onFieldValueChange}
-								fieldData={fields[key]}
-							/>
-						))}
-					</Form>
-				</Card.Content>
-				<Button
-					positive
-					onClick={onSaveChanges}
-					disabled={isSubmitDisabled}
-				>
-					Save changes
-				</Button>
-			</Card>
-		</Container>
+		<FormCard name={name} isLoaded={isLoaded}>
+			<Card.Content>
+				<Form onSubmit={onSaveChanges}>
+					{fieldsIdsList.map(key => (
+						<FillCardContent
+							key={key}
+							id={key}
+							onChange={onFieldValueChange}
+							fieldData={fields[key]}
+						/>
+					))}
+				</Form>
+			</Card.Content>
+			<Button
+				positive
+				onClick={onSaveChanges}
+				disabled={isSubmitDisabled}
+			>
+				Save changes
+			</Button>
+		</FormCard>
 	);
 };
 

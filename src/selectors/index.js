@@ -1,9 +1,10 @@
 import { createSelector } from 'reselect';
-import { FORMS, FILLS } from '../constants';
+import { FORMS, FILLS, FILLS_IDS } from '../constants';
 
 export const getFormsList = state => state.global.formsList || [];
 export const getLoadedData = state => state.global.loadedData || [];
-export const getFillsList = state => state.global.fillsList || [];
+export const getFillsList = state => state.global.fills || [];
+export const getFillsIdsList = state => state.global.fillsIdsList || [];
 export const getIdFromMatch = (state, { match }) => match.params.id;
 
 export const getAreFormsLoaded = createSelector(
@@ -11,6 +12,10 @@ export const getAreFormsLoaded = createSelector(
 	loadedData => loadedData.includes(FORMS),
 );
 
+export const getAreFillsIdsLoaded = createSelector(
+	[getLoadedData],
+	loadedData => loadedData.includes(FILLS_IDS),
+);
 export const getAreFillsLoaded = createSelector(
 	[getLoadedData],
 	loadedData => loadedData.includes(FILLS),

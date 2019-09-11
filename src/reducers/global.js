@@ -5,12 +5,14 @@ import {
 	addFill,
 	deleteForm,
 	setRedirectUrl,
+	addFillId,
 } from '../actions';
 
 export const initialState = {
 	loadedData: [],
 	formsList: [],
-	fillsList: [],
+	fills: {},
+	fillsIdsList: [],
 	redirectUrl: '',
 };
 
@@ -26,7 +28,11 @@ export default handleActions(
 		}),
 		[addFill]: (state, { payload }) => ({
 			...state,
-			fillsList: [...state.fillsList, payload],
+			fills: {
+				...state.fills,
+				[payload.fillId]: [...payload.fillId, payload.fieldsList],
+			},
+			fillsIdsList: [...state.fillsIdsList, payload.fillId],
 		}),
 		[deleteForm]: (state, { payload }) => ({
 			...state,
@@ -35,6 +41,10 @@ export default handleActions(
 		[setRedirectUrl]: (state, { payload }) => ({
 			...state,
 			redirectUrl: payload,
+		}),
+		[addFillId]: (state, { payload }) => ({
+			...state,
+			fillsIdsList: [...state.fillsIdsList, payload],
 		}),
 	},
 	initialState,

@@ -1,9 +1,12 @@
 import { database } from '../../fbConfig';
+import { API_PATH, FILLS } from '../constants';
+import { getFillId } from '../helpers';
+import { showErrorMessage } from '../helpers/messages';
 
-export const loadFormsList = () => {
+export const fetchLoadData = type => {
 	return new Promise((resolve, reject) => {
 		database
-			.ref('/forms/')
+			.ref(`/${type}/`)
 			.once('value')
 			.then(snapshot => {
 				try {
@@ -46,14 +49,23 @@ export const editFormById = (id, name, fields) => {
 	});
 };
 
-export const removeFormById = id => {
+export const fetchRemoveForm = (id, name) => {
+	const fillId = getFillId(id, name);
+
 	return new Promise((resolve, reject) => {
 		database
 			.ref(`/forms/${id}`)
 			.remove()
 			.then(error => {
 				if (error) reject(error);
-				else resolve('Success');
+				else {
+					const fillsRef = database.ref(`/${FILLS}/${fillId}`);
+
+					fillsRef.remove().then(err => {
+						if (err) showErrorMessage(err);
+					});
+					resolve('Success');
+				}
 			});
 	});
 };
@@ -70,13 +82,22 @@ export const fetchFormById = id => {
 	});
 };
 
-export const fetchCreateFill = ({ id, name, fieldsList }) => {
+export const fetchCreateFill = ({ fillId, fieldsList }) => {
 	return new Promise((resolve, reject) => {
-		const newFillRef = database.ref(`/fills/${name}::${id}`).push();
+		const newFillRef = database.ref(`/${FILLS}/${fillId}`).push();
 
 		newFillRef.set(fieldsList).then(error => {
 			if (error) reject(error);
-			else resolve('Success');
+			else resolve(newFillRef);
 		});
+	});
+};
+
+export const fetchFillsIds = () => {
+	return new Promise((resolve, reject) => {
+		fetch(`${API_PATH}/fills.json?shallow=true`)
+			.then(response => response.json())
+			.then(resolve)
+			.catch(reject);
 	});
 };

@@ -1,31 +1,70 @@
-import { deleteForm } from '.';
-import { removeFormById, fetchCreateFill } from '../models';
-import { showInfoMessage, showErrorMessage } from '../helpers/messages';
+import { addFillId, deleteForm, setLoadedData, addForm, addFill } from '.';
+import {
+	fetchRemoveForm,
+	fetchCreateFill,
+	fetchFillsIds,
+	fetchLoadData,
+} from '../models';
+import {
+	showInfoMessage,
+	showErrorMessage,
+	showPrompt,
+} from '../helpers/messages';
+import { DELIMITER, FILLS_IDS, FORMS } from '../constants';
+import { getAreFillsLoaded } from '../selectors';
+import { getFillId } from '../helpers';
 
-export const requestDeleteForm = id => {
+export const requestDeleteForm = (id, name) => {
 	return dispatch => {
-		removeFormById(id)
-			.then(() => {
-				dispatch(deleteForm(id));
-				showInfoMessage('Form deleted');
-			})
-			.catch(showErrorMessage);
+		showPrompt('You want to delete form').then(() =>
+			fetchRemoveForm(id, name)
+				.then(() => {
+					dispatch(deleteForm(id));
+					showInfoMessage('Form deleted');
+				})
+				.catch(showErrorMessage),
+		);
 	};
 };
 
 export const createFill = ({ id, name, fields }) => {
 	const fieldsList = Object.values(fields);
+	const fillId = getFillId(id, name);
 
-	return dispatch => {
-		debugger;
-		fetchCreateFill({ id, name, fieldsList })
-			.then(success => {
-				debugger;
+	return (dispatch, getState) => {
+		const areFillsLoaded = getAreFillsLoaded(getState());
+
+		fetchCreateFill({ fillId, fieldsList })
+			.then(() => {
+				if (areFillsLoaded) addFill({ fillId, fieldsList });
+				showInfoMessage('Thank you for filling the form!');
 			})
-			.catch(error => {
-				debugger;
-			});
+			.catch(showErrorMessage);
 	};
 };
 
-export default requestDeleteForm;
+export const loadData = type => dispatch => {
+	fetchLoadData(type)
+		.then(data =>
+			data.forEach(item => {
+				dispatch(type === FORMS ? addForm(item) : addFill(item));
+			}),
+		)
+		.catch(showErrorMessage)
+		.finally(() => dispatch(setLoadedData(FORMS)));
+};
+
+export const getFillsIds = () => dispatch => {
+	fetchFillsIds()
+		.then(fills => {
+			if (fills && typeof fills === 'object')
+				Object.keys(fills).forEach(key => {
+					const regExp = new RegExp(`.+${DELIMITER}`);
+					const id = key.replace(regExp, '');
+
+					if (id) dispatch(addFillId(id));
+				});
+		})
+		.catch(showErrorMessage)
+		.finally(() => dispatch(setLoadedData(FILLS_IDS)));
+};

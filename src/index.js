@@ -5,9 +5,11 @@ import { Provider } from 'react-redux';
 import store from './store';
 import Editor from './pages/formEditor/containers/FormEditor';
 import Filler from './pages/formFiller/containers/FormFiller';
+import Filled from './pages/formFiller/components/FilledCardPage';
 import HomePage from './pages/home/containers/Home';
 import 'semantic-ui-css/semantic.min.css';
-import { EDIT_FORM, FILL_FORM, HOME, NEW_FORM } from './constants';
+import { EDIT_FORM, FILL_FORM, HOME, NEW_FORM, FILLED } from './constants';
+import './styles.css';
 
 const rootElement = document.getElementById('root');
 
@@ -18,8 +20,9 @@ const AppRouter = () => {
 				<Switch>
 					<Route exact path={HOME} component={HomePage} />
 					<Route path={NEW_FORM} component={Editor} />
-					<Route path={`${EDIT_FORM}/:id`} component={Editor} />
-					<Route path={`${FILL_FORM}/:id`} component={Filler} />
+					<Route exact path={`${EDIT_FORM}/:id`} component={Editor} />
+					<Route exact path={`${FILL_FORM}/:id`} component={Filler} />
+					<Route exact path={`${FILLED}/:id`} conponent={Filled} />
 					<Route
 						render={() => <h1>404 Page will be right here</h1>}
 					/>

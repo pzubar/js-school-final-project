@@ -1,9 +1,11 @@
-export const FORMS = 'FORMS';
-export const FILLS = 'FILLS';
+export const FORMS = 'forms';
+export const FILLS = 'fills';
+export const FILLS_IDS = 'fills_ids';
 export const HOME = '/';
 export const NEW_FORM = '/form/new';
 export const EDIT_FORM = '/form/e';
 export const FILL_FORM = '/form/f';
+export const FILLED = '/filled';
 export const MAX_FIELDS_IN_FORM = 15;
 export const INITIAL_FIELD_DATA = { type: 'input', label: 'Unnamed question' };
 export const DROPDOWN = 'dropdown';
@@ -13,3 +15,6 @@ export const INPUT = 'input';
 export const NUMBER = 'number';
 export const TEXT = 'text';
 export const FILL_ALL_FIELDS = 'Fill all the fields, please';
+export const API_PATH = '//js-school-final-project-api.firebaseio.com';
+export const DELIMITER = '%%';
+
