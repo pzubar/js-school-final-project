@@ -16,4 +16,3 @@ export const NUMBER = 'number';
 export const TEXT = 'text';
 export const FILL_ALL_FIELDS = 'Fill all the fields, please';
 export const API_PATH = '//js-school-final-project-api.firebaseio.com';
-export const DELIMITER = '%%';

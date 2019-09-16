@@ -6,6 +6,7 @@ import {
 	deleteForm,
 	setRedirectUrl,
 	addFillId,
+	editForm,
 } from '../actions';
 
 export const initialState = {
@@ -30,9 +31,9 @@ export default handleActions(
 			...state,
 			fills: {
 				...state.fills,
-				[payload.fillId]: [...payload.fillId, payload.fieldsList],
+				[payload.id]: [...payload.id, payload.fieldsList],
 			},
-			fillsIdsList: [...state.fillsIdsList, payload.fillId],
+			fillsIdsList: [...state.fillsIdsList, payload.id],
 		}),
 		[deleteForm]: (state, { payload }) => ({
 			...state,
@@ -46,6 +47,13 @@ export default handleActions(
 			...state,
 			fillsIdsList: [...state.fillsIdsList, payload],
 		}),
+		[editForm]: (state, { payload }) =>
+			console.log(payload) || {
+				...state,
+				formsList: state.formsList.map(form =>
+					form.id === payload.id ? { ...payload } : form,
+				),
+			},
 	},
 	initialState,
 );

@@ -63,6 +63,10 @@ const Filler = props => {
 		else window.document.title = 'Form Filler';
 	}, [name]);
 
+	useEffect(() => {
+		setRedirectConnect('');
+	}, [redirectUrl, setRedirectConnect]);
+
 	return redirectUrl ? (
 		<Redirect to={redirectUrl} />
 	) : (

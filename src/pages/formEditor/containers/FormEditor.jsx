@@ -33,7 +33,7 @@ import {
 	getIdFromMatch,
 	getIsFormLoaded,
 } from '../../../selectors';
-import { addForm, setRedirectUrl } from '../../../actions';
+import { addForm, setRedirectUrl, editForm } from '../../../actions';
 
 const FormEditor = props => {
 	const {
@@ -43,6 +43,7 @@ const FormEditor = props => {
 		redirectUrl,
 		addFormConnect,
 		setRedirectConnect,
+		editFormConnect,
 	} = props;
 	const [state, localDispatch] = useReducer(reducer, initialState);
 	const [fieldsList, setFieldsList] = useState([]);
@@ -80,16 +81,17 @@ const FormEditor = props => {
 		editFormById(id, name, Object.values(fields))
 			.then(showInfoMessage)
 			.catch(showErrorMessage);
-	}, [id, name, fields]);
+		editFormConnect({ id, name, fields: Object.values(fields) });
+	}, [id, name, fields, editFormConnect]);
 
 	useEffect(() => setFieldsList(Object.keys(fields)), [fields]);
 
 	useEffect(() => {
-		if (formData) {
+		if (formData && name === initialState.name) {
 			localDispatch(setName(formData.name));
 			formData.fields.forEach(field => localDispatch(addField(field)));
 		}
-	}, [formData]);
+	}, [formData, name]);
 	useEffect(() => {
 		if (!id) {
 			createForm(getNewFormId(), newFormData => {
@@ -115,7 +117,7 @@ const FormEditor = props => {
 	}, [redirectUrl, setRedirectConnect]);
 
 	return redirectUrl ? (
-		<Redirect to={redirectUrl} />
+		<Redirect to={redirectUrl}/>
 	) : (
 		<Container>
 			<Menu inverted>
@@ -126,7 +128,7 @@ const FormEditor = props => {
 				</Container>
 			</Menu>
 			<Dimmer active={!isLoaded} inverted>
-				<Loader inverted content="Loading" />
+				<Loader inverted content="Loading"/>
 			</Dimmer>
 			<Card fluid>
 				<Card.Content>
@@ -191,5 +193,6 @@ export default connect(
 	{
 		addFormConnect: addForm,
 		setRedirectConnect: setRedirectUrl,
+		editFormConnect: editForm,
 	},
 )(FormEditor);

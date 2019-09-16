@@ -17,9 +17,8 @@ import {
 	showErrorMessage,
 	showPrompt,
 } from '../helpers/messages';
-import { DELIMITER, FILLED, FILLS_IDS, FORMS } from '../constants';
+import { FILLED, FILLS_IDS, FORMS } from '../constants';
 import { getAreFillsLoaded } from '../selectors';
-import { getFillId } from '../helpers';
 
 export const requestDeleteForm = (id, name) => {
 	return dispatch => {
@@ -36,14 +35,16 @@ export const requestDeleteForm = (id, name) => {
 
 export const createFill = ({ id, name, fields }) => {
 	const fieldsList = Object.values(fields);
-	const fillId = getFillId(id, name);
 
 	return (dispatch, getState) => {
-		const areFillsLoaded = getAreFillsLoaded(getState());
+		const state = getState();
+		const areFillsLoaded = getAreFillsLoaded(state);
 
-		fetchCreateFill({ fillId, fieldsList })
+		fetchCreateFill({ id, fieldsList })
 			.then(() => {
-				if (areFillsLoaded) addFill({ fillId, fieldsList });
+				if (areFillsLoaded) dispatch(addFill({ id, fieldsList }));
+				if (!state.global.fills[id]) dispatch(addFillId(id));
+
 				showInfoMessage('Thank you for filling the form!');
 				dispatch(setRedirectUrl(`${FILLED}/${id}/${name}`));
 			})
@@ -66,10 +67,7 @@ export const getFillsIds = () => dispatch => {
 	fetchFillsIds()
 		.then(fills => {
 			if (fills && typeof fills === 'object')
-				Object.keys(fills).forEach(key => {
-					const regExp = new RegExp(`.+${DELIMITER}`);
-					const id = key.replace(regExp, '');
-
+				Object.keys(fills).forEach(id => {
 					if (id) dispatch(addFillId(id));
 				});
 		})
