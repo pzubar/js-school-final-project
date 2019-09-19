@@ -3,7 +3,7 @@ import { FORMS, FILLS, FILLS_IDS } from '../constants';
 
 export const getFormsList = state => state.global.formsList || [];
 export const getLoadedData = state => state.global.loadedData || [];
-export const getFillsList = state => state.global.fills || [];
+export const getFills = state => state.global.fills || {};
 export const getFillsIdsList = state => state.global.fillsIdsList || [];
 export const getIdFromMatch = (state, { match }) => match.params.id;
 
@@ -29,4 +29,17 @@ export const getIsFormLoaded = createSelector(
 export const getFormData = createSelector(
 	[getFormsList, getIdFromMatch],
 	(formsList, id) => formsList.find(form => form.id === id),
+);
+
+export const getFillsList = createSelector(
+	[getAreFormsLoaded, getAreFillsLoaded, getFills, getFormsList],
+	(formsLoaded, fillsLoaded, fills, forms) =>
+		formsLoaded && fillsLoaded
+			? forms
+					.map(form => ({
+						...form,
+						answers: fills[form.id],
+					}))
+					.filter(form => form.answers)
+			: [],
 );

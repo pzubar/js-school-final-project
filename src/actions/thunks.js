@@ -3,7 +3,7 @@ import {
 	deleteForm,
 	setLoadedData,
 	addForm,
-	addFill,
+	addFills,
 	setRedirectUrl,
 } from '.';
 import {
@@ -18,7 +18,6 @@ import {
 	showPrompt,
 } from '../helpers/messages';
 import { FILLED, FILLS_IDS, FORMS } from '../constants';
-import { getAreFillsLoaded } from '../selectors';
 
 export const requestDeleteForm = (id, name) => {
 	return dispatch => {
@@ -38,11 +37,9 @@ export const createFill = ({ id, name, fields }) => {
 
 	return (dispatch, getState) => {
 		const state = getState();
-		const areFillsLoaded = getAreFillsLoaded(state);
 
 		fetchCreateFill({ id, fieldsList })
 			.then(() => {
-				if (areFillsLoaded) dispatch(addFill({ id, fieldsList }));
 				if (!state.global.fills[id]) dispatch(addFillId(id));
 
 				showInfoMessage('Thank you for filling the form!');
@@ -54,13 +51,12 @@ export const createFill = ({ id, name, fields }) => {
 
 export const loadData = type => dispatch => {
 	fetchLoadData(type)
-		.then(data =>
-			data.forEach(item => {
-				dispatch(type === FORMS ? addForm(item) : addFill(item));
-			}),
-		)
+		.then(data => {
+			if (type === FORMS) data.forEach(item => dispatch(addForm(item)));
+			else dispatch(addFills(data));
+		})
 		.catch(showErrorMessage)
-		.finally(() => dispatch(setLoadedData(FORMS)));
+		.finally(() => dispatch(setLoadedData(type)));
 };
 
 export const getFillsIds = () => dispatch => {

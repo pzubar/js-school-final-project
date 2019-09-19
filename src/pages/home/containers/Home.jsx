@@ -12,7 +12,7 @@ import {
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { addForm, setLoadedData, setRedirectUrl } from '../../../actions';
-import { FORMS } from '../../../constants';
+import { FORMS, REVIEWER } from '../../../constants';
 import {
 	getAreFormsLoaded,
 	getAreFillsIdsLoaded,
@@ -29,7 +29,7 @@ const HomePage = memo(props => {
 		getFillsIdsConnect,
 		loadDataConnect,
 		redirectUrl,
-		setRedirectConnect
+		setRedirectConnect,
 	} = props;
 
 	useEffect(() => {
@@ -76,9 +76,9 @@ const HomePage = memo(props => {
 							<Icon name="eye" />
 							See filled forms
 						</Header>
-						<Button primary disabled>
-							Filled forms
-						</Button>
+						<Link to={REVIEWER}>
+							<Button primary>Filled forms</Button>
+						</Link>
 					</Grid.Column>
 				</Grid.Row>
 			</Grid>

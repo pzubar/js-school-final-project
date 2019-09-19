@@ -1,5 +1,5 @@
 import { database } from '../../fbConfig';
-import { API_PATH, FILLS } from '../constants';
+import { API_PATH, FILLS, FORMS } from '../constants';
 import { showErrorMessage } from '../helpers/messages';
 
 export const fetchLoadData = type => {
@@ -9,14 +9,22 @@ export const fetchLoadData = type => {
 			.once('value')
 			.then(snapshot => {
 				try {
-					const result = [];
+					const result = type === FORMS ? [] : {};
 
-					snapshot.forEach(childSnapshot => {
-						const id = childSnapshot.key;
-						const { name, fields } = childSnapshot.val();
+					if (type === FORMS) {
+						snapshot.forEach(childSnapshot => {
+							const id = childSnapshot.key;
+							const { name, fields } = childSnapshot.val();
 
-						result.push({ id, name, fields });
-					});
+							result.push({ id, name, fields });
+						});
+					} else {
+						snapshot.forEach(childSnapshot => {
+							const id = childSnapshot.key;
+
+							result[id] = Object.values(childSnapshot.val());
+						});
+					}
 					resolve(result);
 				} catch (e) {
 					reject(e);

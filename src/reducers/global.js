@@ -2,7 +2,7 @@ import { handleActions } from 'redux-actions';
 import {
 	setLoadedData,
 	addForm,
-	addFill,
+	addFills,
 	deleteForm,
 	setRedirectUrl,
 	addFillId,
@@ -27,13 +27,9 @@ export default handleActions(
 			...state,
 			formsList: [...state.formsList, payload],
 		}),
-		[addFill]: (state, { payload }) => ({
+		[addFills]: (state, { payload }) => ({
 			...state,
-			fills: {
-				...state.fills,
-				[payload.id]: [...payload.id, payload.fieldsList],
-			},
-			fillsIdsList: [...state.fillsIdsList, payload.id],
+			fills: payload,
 		}),
 		[deleteForm]: (state, { payload }) => ({
 			...state,
@@ -47,13 +43,12 @@ export default handleActions(
 			...state,
 			fillsIdsList: [...state.fillsIdsList, payload],
 		}),
-		[editForm]: (state, { payload }) =>
-			console.log(payload) || {
-				...state,
-				formsList: state.formsList.map(form =>
-					form.id === payload.id ? { ...payload } : form,
-				),
-			},
+		[editForm]: (state, { payload }) => ({
+			...state,
+			formsList: state.formsList.map(form =>
+				form.id === payload.id ? { ...payload } : form,
+			),
+		}),
 	},
 	initialState,
 );
