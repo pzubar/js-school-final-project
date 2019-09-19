@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card } from 'semantic-ui-react';
 import FormCard from './FormCard';
@@ -8,7 +8,6 @@ const FilledCardPage = ({ match }) => {
 	const { params } = match;
 	const { id, name } = params;
 
-	useEffect
 	return (
 		<FormCard name={name}>
 			<Card.Content>

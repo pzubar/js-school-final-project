@@ -9,7 +9,14 @@ import Filled from './pages/formFiller/components/FilledCardPage';
 import Reviewer from './pages/fillsReviewer/containers';
 import HomePage from './pages/home/containers/Home';
 import 'semantic-ui-css/semantic.min.css';
-import { EDIT_FORM, FILL_FORM, HOME, NEW_FORM, FILLED, REVIEWER } from './constants';
+import {
+	EDIT_FORM,
+	FILL_FORM,
+	HOME,
+	NEW_FORM,
+	FILLED,
+	REVIEWER,
+} from './constants';
 import './styles.css';
 
 const rootElement = document.getElementById('root');
@@ -23,7 +30,7 @@ const AppRouter = () => {
 				<Route exact path={`${EDIT_FORM}/:id`} component={Editor} />
 				<Route exact path={`${FILL_FORM}/:id`} component={Filler} />
 				<Route exact path={`${FILLED}/:id/:name`} component={Filled} />
-				<Route exact path="" component={Reviewer} />
+				<Route exact path={REVIEWER} component={Reviewer} />
 				<Route render={() => <h1>404 Page will be right here</h1>} />
 			</Switch>
 		</Router>

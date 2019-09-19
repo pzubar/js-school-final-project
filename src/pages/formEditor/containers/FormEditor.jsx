@@ -117,7 +117,7 @@ const FormEditor = props => {
 	}, [redirectUrl, setRedirectConnect]);
 
 	return redirectUrl ? (
-		<Redirect to={redirectUrl}/>
+		<Redirect to={redirectUrl} />
 	) : (
 		<Container>
 			<Menu inverted>
@@ -128,7 +128,7 @@ const FormEditor = props => {
 				</Container>
 			</Menu>
 			<Dimmer active={!isLoaded} inverted>
-				<Loader inverted content="Loading"/>
+				<Loader inverted content="Loading" />
 			</Dimmer>
 			<Card fluid>
 				<Card.Content>
