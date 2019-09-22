@@ -1,0 +1,45 @@
+{
+  "extends": [
+    "airbnb",
+    "prettier",
+    "prettier/react",
+    "airbnb/hooks"
+  ],
+  "plugins": [
+    "react",
+    "prettier"
+  ],
+  "rules": {
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [
+          ".js",
+          "jsx"
+        ]
+      }
+    ],
+    "prettier/prettier": "error",
+    "max-len": [
+      "error",
+      80
+    ],
+    "react/prop-types": 0,
+    "react/jsx-tag-spacing": [
+      "error",
+      {
+        "beforeSelfClosing": "allow"
+      }
+    ]
+  },
+  "env": {
+    "browser": true
+  },
+  "settings": {
+    "import/resolver": {
+      "webpack": {
+        "config": "./webpack.config.js"
+      }
+    }
+  }
+}
